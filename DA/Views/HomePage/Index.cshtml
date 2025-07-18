@@ -1,0 +1,603 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang Chủ Trọ Mới</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar {
+            background-color: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #003366;
+        }
+
+        .menu {
+            display: flex;
+            gap: 24px;
+        }
+
+            .menu a {
+                text-decoration: none;
+                color: #222;
+                font-size: 15px;
+            }
+
+        .actions a {
+            text-decoration: none;
+            color: #0055cc;
+            margin-left: 16px;
+            font-weight: 500;
+        }
+
+        /* ========== HERO ========== */
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding: 60px 40px;
+            background: linear-gradient(to bottom, #0a1850, #0046d6);
+            color: white;
+        }
+
+        .hero-content {
+            flex: 1 1 400px;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .hero p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+            .tabs button {
+                padding: 10px 16px;
+                border: none;
+                border-radius: 8px;
+                background-color: #cfe2ff;
+                color: #003366;
+                font-weight: 500;
+                cursor: pointer;
+            }
+
+            .tabs .active {
+                background-color: #003ba5;
+                color: white;
+            }
+
+        .hero-image {
+            flex: 1 1 300px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+            .hero-image img {
+                max-width: 100%;
+                height: auto;
+            }
+
+        /* ========== SEARCH WRAPPER ========== */
+        .search-wrapper {
+            padding: 30px 40px;
+            background-color: #f8f9fb;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-box {
+            background-color: #ffffff;
+            padding: 16px;
+            border-radius: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            width: 100%;
+        }
+
+            .search-box input,
+            .search-box select {
+                padding: 10px 12px;
+                border-radius: 6px;
+                border: 1px solid #ccc;
+                min-width: 150px;
+                font-size: 14px;
+                flex: 1;
+            }
+
+                .search-box input::placeholder {
+                    color: #999;
+                }
+
+            .search-box .search-btn {
+                background-color: #ff5a00;
+                color: white;
+                padding: 10px 18px;
+                border: none;
+                border-radius: 6px;
+                font-weight: bold;
+                cursor: pointer;
+                flex-shrink: 0;
+            }
+
+
+        .hot-places {
+            padding: 40px 20px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a237e;
+            margin-bottom: 24px;
+        }
+
+        .places-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .place-card {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+            .place-card:hover {
+                transform: translateY(-5px);
+            }
+
+        .image-wrapper {
+            position: relative;
+        }
+
+            .image-wrapper img {
+                width: 100%;
+                height: 180px;
+                object-fit: cover;
+            }
+
+        .hot-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: red;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .place-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 12px;
+            height: 40px;
+            overflow: hidden;
+        }
+
+        .price {
+            color: #555;
+            margin: 0 12px;
+            font-size: 14px;
+        }
+
+            .price span {
+                color: #f60;
+                font-weight: bold;
+            }
+
+        .meta {
+            display: flex;
+            gap: 8px;
+            font-size: 13px;
+            margin: 8px 12px;
+        }
+
+        .type, .area {
+            background: #f1f1f1;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .location {
+            font-size: 13px;
+            color: #555;
+            margin: 8px 12px 16px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">🏠 TRỌ MỚI</div>
+        <div class="menu">
+            <a href="#">Nhà trọ, phòng trọ</a>
+            <a href="#">Nhà nguyên căn</a>
+            <a href="#">Căn hộ</a>
+        </div>
+        <div class="actions">
+            <a href=" @Url.Action("Login", "Account")">➔ Đăng nhập</a>
+            <a href=" @Url.Action("Register", "Account")">👤 Đăng ký</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>TÌM NHANH, KIẾM DỄ<br>TRỌ MỚI TOÀN QUỐC</h1>
+            <p>
+                Phòng Trọ khu vực Hà Nội uy tín,giá cực hợp lý
+            </p>
+
+           
+        </div>
+
+       
+    </section>
+
+    <!-- Search Box (separate section) -->
+    <section class="search-wrapper">
+		<div class="tabs">
+			<button class="active">Tất cả</button>
+			<button>Nhà trọ, phòng trọ</button>
+			<button>Nhà nguyên căn</button>
+			<button>Căn hộ</button>
+		</div>
+        <div class="search-box">
+            <input type="text" placeholder="🔍 Bạn muốn tìm trọ ở đâu?">
+            <select>
+                <option>Địa điểm</option>
+                <option>Hà Nội</option>
+                <option>TP.HCM</option>
+            </select>
+            <select>
+                <option>Mức giá</option>
+                <option>Dưới 2 triệu</option>
+                <option>2 - 4 triệu</option>
+            </select>
+            <select>
+                <option>Diện tích</option>
+                <option>10-20 m²</option>
+                <option>20-30 m²</option>
+            </select>
+            <button class="search-btn">🔎 Tìm kiếm</button>
+        </div>
+    </section>
+    <section class="hot-places">
+        <h2 class="section-title">LỰA CHỌN CHỖ Ở HOT</h2>
+        <div class="places-grid">
+
+            <div class="place-card">
+                <div class="image-wrapper">
+                    <img src="https://via.placeholder.com/300x200" alt="phòng 1" />
+                    <span class="hot-badge">HOT</span>
+                </div>
+                <h3 class="place-title">Cho thuê chung cư mini Ngõ 108...</h3>
+                <p class="price">Từ <span>1,7 triệu/tháng</span></p>
+                <div class="meta">
+                    <span class="type">Nhà trọ</span>
+                    <span class="area">28m²</span>
+                </div>
+                <p class="location">📍 Thanh Xuân, Hà Nội</p>
+            </div>
+
+            <div class="place-card">
+                <div class="image-wrapper">
+                    <img src="https://via.placeholder.com/300x200" alt="phòng 1" />
+                    <span class="hot-badge">HOT</span>
+                </div>
+                <h3 class="place-title">Cho thuê chung cư mini Ngõ 108...</h3>
+                <p class="price">Từ <span>1,7 triệu/tháng</span></p>
+                <div class="meta">
+                    <span class="type">Nhà trọ</span>
+                    <span class="area">28m²</span>
+                </div>
+                <p class="location">📍 Thanh Xuân, Hà Nội</p>
+            </div>
+            <div class="place-card">
+                <div class="image-wrapper">
+                    <img src="https://via.placeholder.com/300x200" alt="phòng 1" />
+                    <span class="hot-badge">HOT</span>
+                </div>
+                <h3 class="place-title">Cho thuê chung cư mini Ngõ 108...</h3>
+                <p class="price">Từ <span>1,7 triệu/tháng</span></p>
+                <div class="meta">
+                    <span class="type">Nhà trọ</span>
+                    <span class="area">28m²</span>
+                </div>
+                <p class="location">📍 Thanh Xuân, Hà Nội</p>
+            </div>
+            <div class="place-card">
+                <div class="image-wrapper">
+                    <img src="https://via.placeholder.com/300x200" alt="phòng 1" />
+                    <span class="hot-badge">HOT</span>
+                </div>
+                <h3 class="place-title">Cho thuê chung cư mini Ngõ 108...</h3>
+                <p class="price">Từ <span>1,7 triệu/tháng</span></p>
+                <div class="meta">
+                    <span class="type">Nhà trọ</span>
+                    <span class="area">28m²</span>
+                </div>
+                <p class="location">📍 Thanh Xuân, Hà Nội</p>
+            </div>
+            <div class="place-card">
+                <div class="image-wrapper">
+                    <img src="https://via.placeholder.com/300x200" alt="phòng 1" />
+                    <span class="hot-badge">HOT</span>
+                </div>
+                <h3 class="place-title">Cho thuê chung cư mini Ngõ 108...</h3>
+                <p class="price">Từ <span>1,7 triệu/tháng</span></p>
+                <div class="meta">
+                    <span class="type">Nhà trọ</span>
+                    <span class="area">28m²</span>
+                </div>
+                <p class="location">📍 Thanh Xuân, Hà Nội</p>
+            </div>
+            <div class="place-card">
+                <div class="image-wrapper">
+                    <img src="https://via.placeholder.com/300x200" alt="phòng 1" />
+                    <span class="hot-badge">HOT</span>
+                </div>
+                <h3 class="place-title">Cho thuê chung cư mini Ngõ 108...</h3>
+                <p class="price">Từ <span>1,7 triệu/tháng</span></p>
+                <div class="meta">
+                    <span class="type">Nhà trọ</span>
+                    <span class="area">28m²</span>
+                </div>
+                <p class="location">📍 Thanh Xuân, Hà Nội</p>
+            </div>
+            <div class="place-card">
+                <div class="image-wrapper">
+                    <img src="https://via.placeholder.com/300x200" alt="phòng 1" />
+                    <span class="hot-badge">HOT</span>
+                </div>
+                <h3 class="place-title">Cho thuê chung cư mini Ngõ 108...</h3>
+                <p class="price">Từ <span>1,7 triệu/tháng</span></p>
+                <div class="meta">
+                    <span class="type">Nhà trọ</span>
+                    <span class="area">28m²</span>
+                </div>
+                <p class="location">📍 Thanh Xuân, Hà Nội</p>
+            </div>
+            <div class="place-card">
+                <div class="image-wrapper">
+                    <img src="https://via.placeholder.com/300x200" alt="phòng 1" />
+                    <span class="hot-badge">HOT</span>
+                </div>
+                <h3 class="place-title">Cho thuê chung cư mini Ngõ 108...</h3>
+                <p class="price">Từ <span>1,7 triệu/tháng</span></p>
+                <div class="meta">
+                    <span class="type">Nhà trọ</span>
+                    <span class="area">28m²</span>
+                </div>
+                <p class="location">📍 Thanh Xuân, Hà Nội</p>
+            </div>
+            <div class="place-card">
+                <div class="image-wrapper">
+                    <img src="https://via.placeholder.com/300x200" alt="phòng 1" />
+                    <span class="hot-badge">HOT</span>
+                </div>
+                <h3 class="place-title">Cho thuê chung cư mini Ngõ 108...</h3>
+                <p class="price">Từ <span>1,7 triệu/tháng</span></p>
+                <div class="meta">
+                    <span class="type">Nhà trọ</span>
+                    <span class="area">28m²</span>
+                </div>
+                <p class="location">📍 Thanh Xuân, Hà Nội</p>
+            </div>
+            <div class="place-card">
+                <div class="image-wrapper">
+                    <img src="https://via.placeholder.com/300x200" alt="phòng 1" />
+                    <span class="hot-badge">HOT</span>
+                </div>
+                <h3 class="place-title">Cho thuê chung cư mini Ngõ 108...</h3>
+                <p class="price">Từ <span>1,7 triệu/tháng</span></p>
+                <div class="meta">
+                    <span class="type">Nhà trọ</span>
+                    <span class="area">28m²</span>
+                </div>
+                <p class="location">📍 Thanh Xuân, Hà Nội</p>
+            </div>
+            <div class="place-card">
+                <div class="image-wrapper">
+                    <img src="https://via.placeholder.com/300x200" alt="phòng 1" />
+                    <span class="hot-badge">HOT</span>
+                </div>
+                <h3 class="place-title">Cho thuê chung cư mini Ngõ 108...</h3>
+                <p class="price">Từ <span>1,7 triệu/tháng</span></p>
+                <div class="meta">
+                    <span class="type">Nhà trọ</span>
+                    <span class="area">28m²</span>
+                </div>
+                <p class="location">📍 Thanh Xuân, Hà Nội</p>
+            </div>
+            <div class="place-card">
+                <div class="image-wrapper">
+                    <img src="https://via.placeholder.com/300x200" alt="phòng 1" />
+                    <span class="hot-badge">HOT</span>
+                </div>
+                <h3 class="place-title">Cho thuê chung cư mini Ngõ 108...</h3>
+                <p class="price">Từ <span>1,7 triệu/tháng</span></p>
+                <div class="meta">
+                    <span class="type">Nhà trọ</span>
+                    <span class="area">28m²</span>
+                </div>
+                <p class="location">📍 Thanh Xuân, Hà Nội</p>
+            </div>
+            <div class="place-card">
+                <div class="image-wrapper">
+                    <img src="https://via.placeholder.com/300x200" alt="phòng 1" />
+                    <span class="hot-badge">HOT</span>
+                </div>
+                <h3 class="place-title">Cho thuê chung cư mini Ngõ 108...</h3>
+                <p class="price">Từ <span>1,7 triệu/tháng</span></p>
+                <div class="meta">
+                    <span class="type">Nhà trọ</span>
+                    <span class="area">28m²</span>
+                </div>
+                <p class="location">📍 Thanh Xuân, Hà Nội</p>
+            </div>
+            <div class="place-card">
+                <div class="image-wrapper">
+                    <img src="https://via.placeholder.com/300x200" alt="phòng 1" />
+                    <span class="hot-badge">HOT</span>
+                </div>
+                <h3 class="place-title">Cho thuê chung cư mini Ngõ 108...</h3>
+                <p class="price">Từ <span>1,7 triệu/tháng</span></p>
+                <div class="meta">
+                    <span class="type">Nhà trọ</span>
+                    <span class="area">28m²</span>
+                </div>
+                <p class="location">📍 Thanh Xuân, Hà Nội</p>
+            </div>
+            <div class="place-card">
+                <div class="image-wrapper">
+                    <img src="https://via.placeholder.com/300x200" alt="phòng 1" />
+                    <span class="hot-badge">HOT</span>
+                </div>
+                <h3 class="place-title">Cho thuê chung cư mini Ngõ 108...</h3>
+                <p class="price">Từ <span>1,7 triệu/tháng</span></p>
+                <div class="meta">
+                    <span class="type">Nhà trọ</span>
+                    <span class="area">28m²</span>
+                </div>
+                <p class="location">📍 Thanh Xuân, Hà Nội</p>
+            </div>
+            <div class="place-card">
+                <div class="image-wrapper">
+                    <img src="https://via.placeholder.com/300x200" alt="phòng 1" />
+                    <span class="hot-badge">HOT</span>
+                </div>
+                <h3 class="place-title">Cho thuê chung cư mini Ngõ 108...</h3>
+                <p class="price">Từ <span>1,7 triệu/tháng</span></p>
+                <div class="meta">
+                    <span class="type">Nhà trọ</span>
+                    <span class="area">28m²</span>
+                </div>
+                <p class="location">📍 Thanh Xuân, Hà Nội</p>
+            </div>
+        </div>
+    </section>
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 id="modal-title"></h2>
+            <p><strong>Giá:</strong> <span id="modal-price"></span></p>
+            <p><strong>Loại:</strong> <span id="modal-type"></span></p>
+            <p><strong>Diện tích:</strong> <span id="modal-area"></span></p>
+            <p><strong>Địa chỉ:</strong> <span id="modal-location"></span></p>
+            <img id="modal-img" src="" style="width: 100%; margin-top: 10px;" />
+        </div>
+    </div>
+
+    
+               <script>
+        const modal = document.getElementById("detailModal");
+        const closeBtn = document.querySelector(".close-btn");
+
+        document.querySelectorAll(".place-card").forEach(card => {
+          card.addEventListener("click", () => {
+            const title = card.querySelector(".place-title")?.innerText || "Không rõ";
+            const price = card.querySelector(".price span")?.innerText || "Không rõ";
+            const type = card.querySelector(".type")?.innerText || "Không rõ";
+            const area = card.querySelector(".area")?.innerText || "Không rõ";
+            const location = card.querySelector(".location")?.innerText || "Không rõ";
+            const imgSrc = card.querySelector("img")?.src || "";
+
+            document.getElementById("modal-title").innerText = title;
+            document.getElementById("modal-price").innerText = price;
+            document.getElementById("modal-type").innerText = type;
+            document.getElementById("modal-area").innerText = area;
+            document.getElementById("modal-location").innerText = location;
+            document.getElementById("modal-img").src = imgSrc;
+
+            modal.style.display = "block";
+          });
+        });
+
+        closeBtn.onclick = () => modal.style.display = "none";
+        window.onclick = (e) => {
+          if (e.target === modal) modal.style.display = "none";
+        };
+    </script>
+
+   
+</body>
+</html>

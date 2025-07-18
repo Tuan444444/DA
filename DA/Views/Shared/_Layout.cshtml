@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - DA</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/DA.styles.css" asp-append-version="true" />
+</head>
+<body>
+    @{
+        var username = Context.Session.GetString("Username");
+        var role = Context.Session.GetString("Role");
+    }
+    <nav>
+        @if (!string.IsNullOrEmpty(username))
+        {
+            <span>Xin chào: @username</span>
+            <a asp-controller="Account" asp-action="Logout">Đăng xuất</a>
+            @if (role == "Admin")
+            {
+                <a asp-controller="Admin" asp-action="Index">Quản trị</a>
+            }
+            else if (role == "ChuNha")
+            {
+                <a asp-controller="ChuNha" asp-action="Dashboard">Chủ nhà</a>
+            }
+            else
+            {
+                <a asp-controller="NguoiThue" asp-action="Dashboard">Người thuê</a>
+            }
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Login">Đăng nhập</a>
+            <a asp-controller="Account" asp-action="Register">Đăng ký</a>
+        }
+    </nav>
+
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+   
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

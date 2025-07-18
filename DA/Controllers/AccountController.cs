@@ -45,7 +45,6 @@ public class AccountController : Controller
         return RedirectToAction("Login");
     }
 
-    // Hiển thị form đăng nhập
     public IActionResult Login() => View();
 
     [HttpPost]

@@ -15,18 +15,11 @@ namespace DA.Models
         public string MatKhau { get; set; }
 
         [Required]
-        public string VaiTro { get; set; } // "chunha" hoặc "nguoithue"
+        public string VaiTro { get; set; } // "ChuNha" hoặc "NguoiThue"
 
-        // Liên kết đến Chủ nhà (nếu là chủ nhà)
-        public int? MaChuNha { get; set; }
+        public int? MaChuNha { get; set; } // nullable
 
-        [ForeignKey("MaChuNha")]
-        public ChuNha? ChuNha { get; set; }
-
-        // Liên kết đến Người thuê (nếu là người thuê)
-        public int? MaNguoiThue { get; set; }
-
-        [ForeignKey("MaNguoiThue")]
-        public NguoiThue? NguoiThue { get; set; }
+        public int? MaNguoiThue { get; set; } // nullable
     }
+
 }

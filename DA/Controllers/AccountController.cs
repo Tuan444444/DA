@@ -13,32 +13,57 @@ public class AccountController : Controller
         _context = context;
     }
 
-    // Hiển thị form đăng ký
     public IActionResult Register() => View();
 
     [HttpPost]
     public IActionResult Register(RegisterViewModel model)
     {
-        if (!ModelState.IsValid)
-            return View(model);
+        if (!ModelState.IsValid) return View(model);
 
-        var exists = _context.TaiKhoans.Any(x => x.TenDangNhap == model.TenDangNhap);
-        if (exists)
+        if (_context.TaiKhoans.Any(x => x.TenDangNhap == model.TenDangNhap))
         {
-            ModelState.AddModelError("", "Tên đăng nhập đã tồn tại.");
+            ModelState.AddModelError("", "Tên đăng nhập đã tồn tại");
             return View(model);
         }
 
-        var tk = new TaiKhoan
+        var taiKhoan = new TaiKhoan
         {
             TenDangNhap = model.TenDangNhap,
             MatKhau = model.MatKhau,
-            VaiTro = model.VaiTro,
-            MaChuNha = model.VaiTro == "ChuNha" ? model.MaChuNha : null,
-            MaNguoiThue = model.VaiTro == "NguoiThue" ? model.MaNguoiThue : null
+            LoaiTaiKhoan = model.LoaiTaiKhoan,
+            TrangThai = "Hoạt động",
+            NgayTao = DateTime.Now
         };
+        _context.TaiKhoans.Add(taiKhoan);
+        _context.SaveChanges();
 
-        _context.TaiKhoans.Add(tk);
+        if (model.LoaiTaiKhoan == "ChuNha")
+        {
+            var cn = new ChuNha
+            {
+                MaTaiKhoan = taiKhoan.MaTaiKhoan,
+                HoTen = model.HoTen,
+                CCCD = model.CCCD,
+                SoDienThoai = model.SoDienThoai,
+                Email = model.Email,
+                DiaChi = model.DiaChi
+            };
+            _context.ChuNhas.Add(cn);
+        }
+        else if (model.LoaiTaiKhoan == "NguoiThue")
+        {
+            var nt = new NguoiThue
+            {
+                MaTaiKhoan = taiKhoan.MaTaiKhoan,
+                HoTen = model.HoTen,
+                CCCD = model.CCCD,
+                SoDienThoai = model.SoDienThoai,
+                Email = model.Email,
+                DiaChi = model.DiaChi
+            };
+            _context.NguoiThues.Add(nt);
+        }
+
         _context.SaveChanges();
 
         TempData["Message"] = "Đăng ký thành công!";
@@ -50,28 +75,23 @@ public class AccountController : Controller
     [HttpPost]
     public IActionResult Login(LoginViewModel model)
     {
-        if (!ModelState.IsValid)
-            return View(model);
+        var tk = _context.TaiKhoans
+            .FirstOrDefault(x => x.TenDangNhap == model.TenDangNhap && x.MatKhau == model.MatKhau);
 
-        var tk = _context.TaiKhoans.FirstOrDefault(x =>
-            x.TenDangNhap == model.TenDangNhap && x.MatKhau == model.MatKhau);
-
-        if (tk == null)
+        if (tk == null || tk.TrangThai == "Bị khóa")
         {
-            ModelState.AddModelError("", "Sai tên đăng nhập hoặc mật khẩu.");
-            return View();
+            ModelState.AddModelError("", "Đăng nhập thất bại hoặc tài khoản bị khóa");
+            return View(model);
         }
 
-        TempData["Message"] = $"Đăng nhập thành công với vai trò: {tk.VaiTro}";
+        TempData["Message"] = $"Đăng nhập thành công: {tk.LoaiTaiKhoan}";
 
-        if (tk.VaiTro == "ChuNha")
-            return RedirectToAction("DashboardChuNha", "Home");
-        else if (tk.VaiTro == "NguoiThue")
-            return RedirectToAction("DashboardNguoiThue", "Home");
-        else if (tk.VaiTro == "Admin")
-            return RedirectToAction("Index", "Admin");
-
-
-            return RedirectToAction("Login");
+        if (tk.LoaiTaiKhoan == "Admin")
+            return RedirectToAction("AdminDashboard", "Home");
+        else if (tk.LoaiTaiKhoan == "ChuNha")
+            return RedirectToAction("ChuNhaDashboard", "Home");
+        else
+            return RedirectToAction("NguoiThueDashboard", "Home");
     }
 }
+

@@ -6,17 +6,15 @@ namespace DA.ViewModels
 
     public class RegisterViewModel
     {
-        [Required]
-        public string VaiTro { get; set; } // ChuNha | NguoiThue
-
-        [Required]
         public string TenDangNhap { get; set; }
-
-        [Required]
         public string MatKhau { get; set; }
-
-        public int? MaChuNha { get; set; }
-        public int? MaNguoiThue { get; set; }
+        public string LoaiTaiKhoan { get; set; } // Admin, ChuNha, NguoiThue
+        public string HoTen { get; set; }
+        public string CCCD { get; set; }
+        public string SoDienThoai { get; set; }
+        public string Email { get; set; }
+        public string DiaChi { get; set; }
     }
+
 
 }

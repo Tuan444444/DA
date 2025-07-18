@@ -3,33 +3,22 @@
 <h2>Đăng ký</h2>
 
 <form asp-action="Register" method="post">
-    <div>
-        <label>Loại tài khoản:</label>
-        <select asp-for="VaiTro" id="roleSelect" class="form-select">
-            <option value="">-- Chọn --</option>
-            <option value="ChuNha">Chủ nhà</option>
-            <option value="NguoiThue">Người thuê</option>
-        </select>
-    </div>
+    <select asp-for="LoaiTaiKhoan" class="form-select" id="roleSelect">
+        <option value="">-- Chọn loại tài khoản --</option>
+        <option value="Admin">Admin</option>
+        <option value="ChuNha">Chủ nhà</option>
+        <option value="NguoiThue">Người thuê</option>
+    </select>
 
-    <div>
-        <label>Tên đăng nhập:</label>
-        <input asp-for="TenDangNhap" class="form-control" />
-    </div>
+    <input asp-for="TenDangNhap" placeholder="Tên đăng nhập" class="form-control" />
+    <input asp-for="MatKhau" placeholder="Mật khẩu" type="password" class="form-control" />
 
-    <div>
-        <label>Mật khẩu:</label>
-        <input asp-for="MatKhau" type="password" class="form-control" />
-    </div>
-
-    <div id="maChuNhaField" style="display:none;">
-        <label>Mã Chủ nhà:</label>
-        <input asp-for="MaChuNha" class="form-control" />
-    </div>
-
-    <div id="maNguoiThueField" style="display:none;">
-        <label>Mã Người thuê:</label>
-        <input asp-for="MaNguoiThue" class="form-control" />
+    <div id="detailFields" style="display:none;">
+        <input asp-for="HoTen" placeholder="Họ tên" class="form-control" />
+        <input asp-for="CCCD" placeholder="CCCD" class="form-control" />
+        <input asp-for="SoDienThoai" placeholder="Số điện thoại" class="form-control" />
+        <input asp-for="Email" placeholder="Email" class="form-control" />
+        <input asp-for="DiaChi" placeholder="Địa chỉ" class="form-control" />
     </div>
 
     <button type="submit" class="btn btn-primary">Đăng ký</button>
@@ -37,20 +26,14 @@
 
 @section Scripts {
     <script>
-        const select = document.getElementById("roleSelect");
-        const maChuNha = document.getElementById("maChuNhaField");
-        const maNguoiThue = document.getElementById("maNguoiThueField");
+        const roleSelect = document.getElementById("roleSelect");
+        const detailFields = document.getElementById("detailFields");
 
-        select.addEventListener("change", () => {
-            if (select.value === "ChuNha") {
-                maChuNha.style.display = "block";
-                maNguoiThue.style.display = "none";
-            } else if (select.value === "NguoiThue") {
-                maChuNha.style.display = "none";
-                maNguoiThue.style.display = "block";
+        roleSelect.addEventListener("change", () => {
+            if (roleSelect.value === "Admin" || roleSelect.value === "") {
+                detailFields.style.display = "none";
             } else {
-                maChuNha.style.display = "none";
-                maNguoiThue.style.display = "none";
+                detailFields.style.display = "block";
             }
         });
     </script>

@@ -1,0 +1,82 @@
+﻿@{
+    ViewData["Title"] = "Thống kê Phòng";
+    var tong = ViewBag.TongSoPhong;
+    var trong = ViewBag.SoPhongTrong;
+    var thue = ViewBag.SoPhongDangThue;
+    var baotri = ViewBag.SoPhongBaoTri;
+    var loaiPhongData = ViewBag.LoaiPhongData;
+}
+
+<div class="container mt-5">
+    <h2>Thống kê Phòng</h2>
+
+    <ul>
+        <li><strong>Tổng số phòng:</strong> @tong</li>
+        <li><strong>Phòng trống:</strong> @trong</li>
+        <li><strong>Phòng đang thuê:</strong> @thue</li>
+        <li><strong>Phòng bảo trì:</strong> @baotri</li>
+    </ul>
+
+    <h4>Biểu đồ Trạng Thái Phòng</h4>
+    <canvas id="statusChart" width="400" height="200"></canvas>
+
+    <h4 class="mt-4">Biểu đồ Số Lượng Loại Phòng</h4>
+    <canvas id="typeChart" width="400" height="200"></canvas>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Biểu đồ Trạng Thái
+    const ctx1 = document.getElementById('statusChart').getContext('2d');
+    new Chart(ctx1, {
+        type: 'pie',
+        data: {
+            labels: ['Trống', 'Đang thuê', 'Bảo trì'],
+            datasets: [{
+                label: 'Số lượng',
+                data: [@trong, @thue, @baotri],
+                backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+    // Biểu đồ Loại Phòng
+    const ctx2 = document.getElementById('typeChart').getContext('2d');
+
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: [
+    @foreach (var item in loaiPhongData)
+    {
+        @($"'{item.LoaiPhong}',")
+    }
+            ],
+            datasets: [{
+                label: 'Số lượng theo loại',
+                data: [
+    @foreach (var item in loaiPhongData)
+    {
+        @($"{item.SoLuong},")
+    }
+                ],
+                backgroundColor: '#4BC0C0'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    stepSize: 1
+                }
+            }
+        }
+    });
+</script>

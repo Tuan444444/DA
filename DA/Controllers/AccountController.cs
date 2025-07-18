@@ -87,7 +87,7 @@ public class AccountController : Controller
         TempData["Message"] = $"Đăng nhập thành công: {tk.LoaiTaiKhoan}";
 
         if (tk.LoaiTaiKhoan == "Admin")
-            return RedirectToAction("AdminDashboard", "Home");
+            return RedirectToAction("Index", "Admin");
         else if (tk.LoaiTaiKhoan == "ChuNha")
             return RedirectToAction("ChuNhaDashboard", "Home");
         else

@@ -11,7 +11,7 @@ namespace DA.Data
             : base(options)
         {
         }
-       
+        public DbSet<Phong> Phongs { get; set; }
         public DbSet<ChuNha> ChuNhas { get; set; }
         public DbSet<NguoiThue> NguoiThues { get; set; }
         public DbSet<TaiKhoan> TaiKhoans { get; set; }
@@ -33,6 +33,14 @@ namespace DA.Data
                 .HasOne(t => t.NguoiThue)
                 .WithOne(nt => nt.TaiKhoan)
                 .HasForeignKey<NguoiThue>(nt => nt.MaTaiKhoan)
+                .OnDelete(DeleteBehavior.Cascade);
+            //
+            modelBuilder.Entity<Phong>().ToTable("Phong");
+            // FK Phong -> ChuNha
+            modelBuilder.Entity<Phong>()
+                .HasOne(p => p.ChuNha)
+                .WithMany()
+                .HasForeignKey(p => p.MaChuNha)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

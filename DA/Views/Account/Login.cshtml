@@ -2,21 +2,8 @@
 
 <h2>Đăng nhập</h2>
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-success">@TempData["Message"]</div>
-}
-
 <form asp-action="Login" method="post">
-    <div>
-        <label>Tên đăng nhập:</label>
-        <input asp-for="TenDangNhap" class="form-control" />
-    </div>
-
-    <div>
-        <label>Mật khẩu:</label>
-        <input asp-for="MatKhau" type="password" class="form-control" />
-    </div>
-
+    <input asp-for="TenDangNhap" placeholder="Tên đăng nhập" class="form-control" />
+    <input asp-for="MatKhau" placeholder="Mật khẩu" type="password" class="form-control" />
     <button type="submit" class="btn btn-success">Đăng nhập</button>
 </form>

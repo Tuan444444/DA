@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class NguoiThue
+public class ChuNha
 {
     [Key]
-    public int MaNguoiThue { get; set; }
+    public int MaChuNha { get; set; }
 
     [ForeignKey("TaiKhoan")]
     public int MaTaiKhoan { get; set; } // FK

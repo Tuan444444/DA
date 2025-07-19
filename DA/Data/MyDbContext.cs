@@ -11,9 +11,37 @@ namespace DA.Data
             : base(options)
         {
         }
-       
+        public DbSet<Phong> Phongs { get; set; }
         public DbSet<ChuNha> ChuNhas { get; set; }
         public DbSet<NguoiThue> NguoiThues { get; set; }
         public DbSet<TaiKhoan> TaiKhoans { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TaiKhoan>().ToTable("TaiKhoan");
+            modelBuilder.Entity<ChuNha>().ToTable("ChuNha");
+            modelBuilder.Entity<NguoiThue>().ToTable("NguoiThue");
+
+            // 1:1 ChuNha - TaiKhoan
+            modelBuilder.Entity<TaiKhoan>()
+                .HasOne(t => t.ChuNha)
+                .WithOne(cn => cn.TaiKhoan)
+                .HasForeignKey<ChuNha>(cn => cn.MaTaiKhoan)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // 1:1 NguoiThue - TaiKhoan
+            modelBuilder.Entity<TaiKhoan>()
+                .HasOne(t => t.NguoiThue)
+                .WithOne(nt => nt.TaiKhoan)
+                .HasForeignKey<NguoiThue>(nt => nt.MaTaiKhoan)
+                .OnDelete(DeleteBehavior.Cascade);
+            //
+            modelBuilder.Entity<Phong>().ToTable("Phong");
+            // FK Phong -> ChuNha
+            modelBuilder.Entity<Phong>()
+                .HasOne(p => p.ChuNha)
+                .WithMany()
+                .HasForeignKey(p => p.MaChuNha)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }

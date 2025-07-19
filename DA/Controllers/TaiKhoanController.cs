@@ -1,7 +1,7 @@
 ﻿using DA.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using DA.Models;
 
 public class TaiKhoanController : Controller
 {

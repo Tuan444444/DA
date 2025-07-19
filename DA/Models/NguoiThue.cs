@@ -1,19 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
-public class NguoiThue
+namespace DA.Models // 🔧 Thêm dòng này
 {
-    [Key]
-    public int MaNguoiThue { get; set; }
+    public class NguoiThue
+    {
+        [Key]
+        public int MaNguoiThue { get; set; }
 
-    [ForeignKey("TaiKhoan")]
-    public int MaTaiKhoan { get; set; } // FK
+        [ForeignKey("TaiKhoan")]
+        public int MaTaiKhoan { get; set; } // FK
 
-    public string HoTen { get; set; }
-    public string CCCD { get; set; }
-    public string SoDienThoai { get; set; }
-    public string Email { get; set; }
-    public string DiaChi { get; set; }
+        public string HoTen { get; set; }
+        public string CCCD { get; set; }
+        public string SoDienThoai { get; set; }
+        public string Email { get; set; }
+        public string DiaChi { get; set; }
 
-    public virtual TaiKhoan TaiKhoan { get; set; } // Điều hướng
+        public virtual TaiKhoan TaiKhoan { get; set; } // Điều hướng
+    }
 }

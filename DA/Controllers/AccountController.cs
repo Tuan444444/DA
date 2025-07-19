@@ -84,6 +84,9 @@ public class AccountController : Controller
             return View(model);
         }
 
+        HttpContext.Session.SetInt32("MaTaiKhoan", tk.MaTaiKhoan);
+        HttpContext.Session.SetString("VaiTro", tk.LoaiTaiKhoan);
+
         TempData["Message"] = $"Đăng nhập thành công: {tk.LoaiTaiKhoan}";
 
         if (tk.LoaiTaiKhoan == "Admin")
@@ -91,7 +94,7 @@ public class AccountController : Controller
         else if (tk.LoaiTaiKhoan == "ChuNha")
             return RedirectToAction("ChuNhaDashboard", "Home");
         else
-            return RedirectToAction("NguoiThueDashboard", "Home");
+             return RedirectToAction("Dashboard", "NguoiThue");
     }
 }
 

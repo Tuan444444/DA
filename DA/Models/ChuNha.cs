@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 namespace DA.Models
 {
+    [Table("ChuNha")]
     public class ChuNha
     {
         [Key]

@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DA.Models
 {
+    [Table("PhanHoi")]
     public class PhanHoi
     {
         [Key]
@@ -19,6 +21,7 @@ namespace DA.Models
         public DateTime? NgayXuLy { get; set; }
 
         // FK
+        [ForeignKey("MaNguoiThue")]
         public NguoiThue NguoiThue { get; set; }
     }
 

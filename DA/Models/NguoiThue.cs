@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 namespace DA.Models // 🔧 Thêm dòng này
 {
+    [Table("NguoiThue")]
     public class NguoiThue
     {
         [Key]

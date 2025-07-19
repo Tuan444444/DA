@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DA.Models
 {
+    [Table("HopDong")]
     public class HopDong
     {
         [Key]
@@ -18,8 +20,11 @@ namespace DA.Models
         [MaxLength(50)]
         public string TrangThai { get; set; }
 
-        // FK
+        // KHÓA NGOẠI
+        [ForeignKey("MaNguoiThue")]
         public NguoiThue NguoiThue { get; set; }
+
+        [ForeignKey("MaPhong")]
         public Phong Phong { get; set; }
 
         // Quan hệ ngược

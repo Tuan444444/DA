@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DA.Models
 {
+    [Table("DichVu")]
     public class DichVu
     {
         [Key]

@@ -1,0 +1,47 @@
+﻿@model IEnumerable<DA.Models.Phong>
+
+
+@{
+    Layout = "_ChuLayout";
+}
+<h2>Quản lý Phòng</h2>
+
+<form method="get" class="row g-3 mb-3">
+    <div class="col-auto">
+        <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="Nhập tên phòng..." />
+    </div>
+    <div class="col-auto">
+        @Html.DropDownList("TrangThai", new SelectList(
+                 new List<string> { "Tất cả", "Trống", "Đang thuê", "Bảo trì" }, ViewBag.TrangThai as string),
+                 "Chọn trạng thái", new { @class = "form-select" })
+
+
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">🔍 Tìm kiếm</button>
+    </div>
+</form>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Tên Phòng</th>
+            <th>Loại Phòng</th>
+            <th>Giá</th>
+            <th>Diện Tích</th>
+            <th>Trạng Thái</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.TenPhong</td>
+                <td>@p.LoaiPhong</td>
+                <td>@p.GiaPhong.ToString("N0") đ</td>
+                <td>@p.DienTich m²</td>
+                <td>@p.TrangThai</td>
+            </tr>
+        }
+    </tbody>
+</table>

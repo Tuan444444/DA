@@ -1,9 +1,9 @@
 ﻿using DA.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
-public class Phong
+namespace DA.Models
 {
+   public class Phong {
     [Key]
     public int MaPhong { get; set; }
 
@@ -26,3 +26,6 @@ public class Phong
     public virtual ChuNha ChuNha { get; set; }
     public ICollection<Phong_DichVu> Phong_DichVus { get; set; }
 }
+
+}
+

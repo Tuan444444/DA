@@ -9,8 +9,7 @@ namespace DA.Models
 
         public int MaHopDong { get; set; }
 
-        [MaxLength(20)]
-        public string ThangNam { get; set; }
+     
 
         public DateTime NgayLap { get; set; }
 

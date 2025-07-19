@@ -62,6 +62,15 @@ namespace DA.Data
                 .HasOne(p => p.DichVu)
                 .WithMany(d => d.Phong_DichVus)
                 .HasForeignKey(p => p.MaDichVu);
+           
+            modelBuilder.Entity<LichSuLuuTru>()
+    .HasOne(x => x.NguoiThue)
+    .WithMany()
+    .HasForeignKey(x => x.MaNguoiThue);
+            modelBuilder.Entity<LichSuLuuTru>()
+.HasOne(x => x.Phong)
+.WithMany()
+.HasForeignKey(x => x.MaPhong);
         }
     }
 }

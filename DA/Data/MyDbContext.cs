@@ -15,6 +15,13 @@ namespace DA.Data
         public DbSet<ChuNha> ChuNhas { get; set; }
         public DbSet<NguoiThue> NguoiThues { get; set; }
         public DbSet<TaiKhoan> TaiKhoans { get; set; }
+        public DbSet<DichVu> DichVus { get; set; }
+        public DbSet<Phong_DichVu> Phong_DichVus { get; set; }
+        public DbSet<HopDong> HopDongs { get; set; }
+        public DbSet<HoaDon> HoaDons { get; set; }
+        public DbSet<ChiTietHoaDon> ChiTietHoaDons { get; set; }
+        public DbSet<PhanHoi> PhanHois { get; set; }
+        public DbSet<LichSuLuuTru> LichSuLuuTrus { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TaiKhoan>().ToTable("TaiKhoan");
@@ -42,6 +49,19 @@ namespace DA.Data
                 .WithMany()
                 .HasForeignKey(p => p.MaChuNha)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Phong_DichVu>()
+           .HasKey(p => new { p.MaPhong, p.MaDichVu });
+
+            // FK mapping chuẩn
+            modelBuilder.Entity<Phong_DichVu>()
+                .HasOne(p => p.Phong)
+                .WithMany(p => p.Phong_DichVus)
+                .HasForeignKey(p => p.MaPhong);
+
+            modelBuilder.Entity<Phong_DichVu>()
+                .HasOne(p => p.DichVu)
+                .WithMany(d => d.Phong_DichVus)
+                .HasForeignKey(p => p.MaDichVu);
         }
     }
 }

@@ -91,7 +91,8 @@ public class AccountController : Controller
         else if (tk.LoaiTaiKhoan == "ChuNha")
             return RedirectToAction("ChuNhaDashboard", "Home");
         else
-            return RedirectToAction("NguoiThueDashboard", "Home");
+            //    return RedirectToAction("NguoiThueDashboard", "Home");
+            return RedirectToAction("Dashboard", "NguoiThue");
     }
 }
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DA.Models;
+namespace DA.Models{ // 🔧 Thêm dòng này
 
 public class TaiKhoan
 {
@@ -24,4 +26,5 @@ public class TaiKhoan
     // Điều hướng
     public virtual ChuNha ChuNha { get; set; }
     public virtual NguoiThue NguoiThue { get; set; }
+}
 }

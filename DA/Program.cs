@@ -13,7 +13,11 @@ var app = builder.Build();
 
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage(); // Hi?n th? l?i chi ti?t khi ch?y debug
+}
+else
 {
     app.UseExceptionHandler("/Home/Error");
 }

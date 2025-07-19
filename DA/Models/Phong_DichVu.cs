@@ -12,7 +12,7 @@ namespace DA.Models
         public int MaDichVu { get; set; }
 
         public DateTime NgayApDung { get; set; }
-
+        //vhjgv
         public Phong Phong { get; set; }
         public DichVu DichVu { get; set; }
     }

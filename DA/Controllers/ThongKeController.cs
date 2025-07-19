@@ -27,20 +27,21 @@ namespace DA.Controllers
         }
         public IActionResult ThongKePhong()
         {
-            // Tổng số lượng
+            // Lấy toàn bộ phòng
             var tongSoPhong = _context.Phongs.Count();
 
-            // Theo trạng thái
+            // Trạng thái
             var soPhongTrong = _context.Phongs.Count(p => p.TrangThai == "Trống");
             var soPhongDangThue = _context.Phongs.Count(p => p.TrangThai == "Đang thuê");
             var soPhongBaoTri = _context.Phongs.Count(p => p.TrangThai == "Bảo trì");
 
-            // Thống kê số lượng theo LoaiPhong
+            // Loại phòng
             var thongKeLoaiPhong = _context.Phongs
                 .GroupBy(p => p.LoaiPhong)
                 .Select(g => new { LoaiPhong = g.Key, SoLuong = g.Count() })
                 .ToList();
 
+            // Gửi sang View
             ViewBag.TongSoPhong = tongSoPhong;
             ViewBag.SoPhongTrong = soPhongTrong;
             ViewBag.SoPhongDangThue = soPhongDangThue;

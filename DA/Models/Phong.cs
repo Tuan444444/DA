@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DA.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 public class Phong
@@ -23,4 +24,5 @@ public class Phong
     public string TrangThai { get; set; }
 
     public virtual ChuNha ChuNha { get; set; }
+    public ICollection<Phong_DichVu> Phong_DichVus { get; set; }
 }

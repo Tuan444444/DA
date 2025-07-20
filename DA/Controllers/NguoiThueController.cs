@@ -26,7 +26,9 @@ namespace DA.Controllers
             return View();
         }
 
+
         // GET: Thông tin cá nhân
+        [HttpGet]
         public IActionResult ThongTinCaNhan()
         {
             int? maTK = HttpContext.Session.GetInt32("MaTaiKhoan");
@@ -40,24 +42,36 @@ namespace DA.Controllers
             return View(nguoiThue);
         }
 
-        // POST: Cập nhật thông tin cá nhân
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult ThongTinCaNhan(NguoiThue model)
         {
-            Console.WriteLine("🔍 Nhận từ form: MaNguoiThue = " + model.MaNguoiThue);
+            // In ra giá trị để kiểm tra
+            Console.WriteLine("🟡 POST MaNguoiThue = " + model.MaNguoiThue);
+
             if (!ModelState.IsValid)
+            {
+                Console.WriteLine("❌ ModelState không hợp lệ!");
+                foreach (var key in ModelState.Keys)
+                {
+                    var errors = ModelState[key].Errors;
+                    foreach (var err in errors)
+                    {
+                        Console.WriteLine($"Lỗi ở {key}: {err.ErrorMessage}");
+                    }
+                }
+
                 return View(model);
+            }
 
             var nguoiThue = _context.NguoiThues.FirstOrDefault(x => x.MaNguoiThue == model.MaNguoiThue);
             if (nguoiThue == null)
             {
-                Console.WriteLine("❌ Không tìm thấy người thuê với MaNguoiThue = " + model.MaNguoiThue);
+                Console.WriteLine("❌ Không tìm thấy người thuê!");
                 return NotFound();
             }
 
-            Console.WriteLine("Hiển thị thông tin cho MaNguoiThue = " + nguoiThue.MaNguoiThue);
-
-            // Cập nhật thủ công để tránh mất liên kết hoặc ghi đè không mong muốn
+            // Cập nhật thủ công
             nguoiThue.HoTen = model.HoTen;
             nguoiThue.CCCD = model.CCCD;
             nguoiThue.SoDienThoai = model.SoDienThoai;
@@ -65,7 +79,7 @@ namespace DA.Controllers
             nguoiThue.DiaChi = model.DiaChi;
 
             _context.SaveChanges();
-            Console.WriteLine("✅ Dữ liệu đã cập nhật");
+            Console.WriteLine("✅ Cập nhật thành công");
 
             TempData["Message"] = "Cập nhật thành công!";
             return RedirectToAction("ThongTinCaNhan");
@@ -85,8 +99,7 @@ namespace DA.Controllers
             return View(taiKhoan);
         
         }
-        [HttpPost]
-       
+     
 
         [HttpPost]
         public IActionResult DoiMatKhau(string MatKhauCu, string MatKhauMoi, string XacNhanMatKhau)
@@ -222,6 +235,16 @@ namespace DA.Controllers
             if (hoaDon == null)
                 return NotFound();
 
+            var tienPhong = hoaDon.HopDong?.Phong?.GiaPhong ?? 0;
+            var tongDichVu = hoaDon.ChiTietHoaDons.Sum(ct => ct.ThanhTien);
+
+            // Lấy phí phạt nếu có (giả định có cột hoặc bảng riêng, ở đây đơn giản hóa)
+            decimal phiPhat = _context.PhanHois
+                .Where(p => p.MaNguoiThue == hoaDon.HopDong.MaNguoiThue && p.KetQuaXuLy.Contains("Phạt"))
+                .Sum(p => 50000); // giả định mỗi vi phạm 50k
+
+            var tongTien = tienPhong + tongDichVu + phiPhat;
+
             var stream = new MemoryStream();
 
             var document = Document.Create(container =>
@@ -232,78 +255,67 @@ namespace DA.Controllers
                     page.Margin(2, Unit.Centimetre);
                     page.DefaultTextStyle(x => x.FontSize(12));
 
-                    page.Header().Row(row =>
+                    // Header
+                    page.Header().AlignCenter().Column(col =>
                     {
-                        row.RelativeItem().Column(col =>
-                        {
-                            col.Item().Text("HỆ THỐNG NHÀ TRỌ ABC").Bold().FontSize(14).FontColor(Colors.Blue.Medium);
-                            col.Item().Text("Địa chỉ: 123 Trọ Xanh, TP.HCM").FontSize(10);
-                            col.Item().Text("Hotline: 0989 000 999").FontSize(10);
-                        });
-
-                        row.ConstantItem(100).Height(60).Image(Placeholders.Image(100, 60)); // Placeholder logo
+                        col.Item().Text("HỆ THỐNG NHÀ TRỌ ABC").Bold().FontSize(14).FontColor(Colors.Blue.Medium);
+                        col.Item().Text("Địa chỉ: 123 Trọ Xanh, TP.HCM").FontSize(10);
+                        col.Item().Text("Hotline: 0989 000 999").FontSize(10);
                     });
 
-                    page.Content().PaddingVertical(10).Column(col =>
+                    page.Content().PaddingVertical(15).Column(col =>
                     {
                         col.Spacing(10);
-
-                        col.Item().Text($"HÓA ĐƠN THANH TOÁN").FontSize(20).Bold().FontColor(Colors.Black).AlignCenter();
+                        col.Item().AlignCenter().Text("HÓA ĐƠN THANH TOÁN").FontSize(20).Bold();
                         col.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
 
-                        // Thông tin chung
-                        col.Item().Row(row =>
-                        {
-                            row.RelativeItem().Column(c =>
-                            {
-                                c.Item().Text($"Mã hóa đơn: {hoaDon.MaHoaDon}").SemiBold();
-                                c.Item().Text($"Ngày lập: {hoaDon.NgayLap:dd/MM/yyyy}");
-                                c.Item().Text($"Trạng thái: {hoaDon.TrangThaiThanhToan}");
-                            });
+                        // Thông tin hóa đơn
+                        col.Item().Text($"Mã hóa đơn: {hoaDon.MaHoaDon}");
+                        col.Item().Text($"Ngày lập: {hoaDon.NgayLap:dd/MM/yyyy}");
+                        col.Item().Text($"Trạng thái: {hoaDon.TrangThaiThanhToan}");
+                        col.Item().Text($"Phòng: {hoaDon.HopDong?.Phong?.TenPhong ?? "N/A"}");
+                        col.Item().Text($"Người thuê: {hoaDon.HopDong?.NguoiThue?.HoTen ?? "N/A"}");
+                        col.Item().Text($"SĐT: {hoaDon.HopDong?.NguoiThue?.SoDienThoai ?? "N/A"}");
 
-                            row.RelativeItem().Column(c =>
-                            {
-                                c.Item().Text($"Phòng: {hoaDon.HopDong?.Phong?.TenPhong ?? "N/A"}").SemiBold();
-                                c.Item().Text($"Người thuê: {hoaDon.HopDong?.NguoiThue?.HoTen ?? "N/A"}");
-                                c.Item().Text($"SĐT: {hoaDon.HopDong?.NguoiThue?.SoDienThoai ?? "N/A"}");
-                            });
-                        });
+                        col.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
 
-                        col.Item().PaddingTop(5).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
-
-                        // Bảng dịch vụ
+                        // Dịch vụ - Bảng
+                        col.Item().Text("Chi tiết dịch vụ sử dụng:").Bold().FontSize(13);
                         col.Item().Table(table =>
                         {
                             table.ColumnsDefinition(columns =>
                             {
-                                columns.RelativeColumn(2);
-                                columns.ConstantColumn(40);
-                                columns.ConstantColumn(80);
-                                columns.ConstantColumn(80);
+                                columns.RelativeColumn(2); // Dịch vụ
+                                columns.ConstantColumn(40); // SL
+                                columns.ConstantColumn(60); // Đơn giá
+                                columns.ConstantColumn(80); // Thành tiền
                             });
 
                             table.Header(header =>
                             {
-                                header.Cell().Element(CellStyle).Text("Dịch vụ").Bold();
-                                header.Cell().Element(CellStyle).AlignRight().Text("SL").Bold();
-                                header.Cell().Element(CellStyle).AlignRight().Text("Đơn giá").Bold();
-                                header.Cell().Element(CellStyle).AlignRight().Text("Thành tiền").Bold();
-
-                                static IContainer CellStyle(IContainer container) =>
-                                    container.DefaultTextStyle(x => x.SemiBold()).Padding(5).Background(Colors.Grey.Lighten3).BorderBottom(1).BorderColor(Colors.Grey.Lighten2);
+                                header.Cell().Text("Dịch vụ").Bold();
+                                header.Cell().AlignRight().Text("Số lượng").Bold();
+                                header.Cell().AlignRight().Text("Đơn giá").Bold();
+                                header.Cell().AlignRight().Text("Thành tiền").Bold();
                             });
 
                             foreach (var ct in hoaDon.ChiTietHoaDons)
                             {
-                                table.Cell().PaddingVertical(5).Text(ct.DichVu?.TenDichVu ?? "N/A");
-                                table.Cell().AlignRight().Text($"{ct.SoLuong}");
+                                table.Cell().Text(ct.DichVu?.TenDichVu ?? "N/A");
+                                table.Cell().AlignRight().Text(ct.SoLuong.ToString());
                                 table.Cell().AlignRight().Text($"{ct.DonGia:N0} đ");
                                 table.Cell().AlignRight().Text($"{ct.ThanhTien:N0} đ");
                             }
                         });
 
-                        col.Item().AlignRight().PaddingTop(10).Text($"Tổng cộng: {hoaDon.TongTien:N0} đ")
-                            .FontSize(14).Bold().FontColor(Colors.Red.Medium);
+                        col.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
+
+                        // Tổng kết cuối cùng
+                        col.Item().Text($"Tiền phòng: {tienPhong:N0} đ");
+                        col.Item().Text($"Tổng dịch vụ: {tongDichVu:N0} đ");
+                        if (phiPhat > 0)
+                            col.Item().Text($"Phí phạt: {phiPhat:N0} đ").FontColor(Colors.Red.Medium);
+                        col.Item().Text($"Tổng cộng: {tongTien:N0} đ").FontSize(14).Bold().FontColor(Colors.Black);
                     });
 
                     page.Footer().AlignCenter().Text("Cảm ơn quý khách đã sử dụng dịch vụ!").Italic().FontSize(10).FontColor(Colors.Grey.Darken1);
@@ -316,11 +328,33 @@ namespace DA.Controllers
             return File(stream.ToArray(), "application/pdf", $"HoaDon_{hoaDon.MaHoaDon}.pdf");
         }
 
-
         // GET: Phản hồi
         public IActionResult PhanHoi()
         {
             return View();
         }
+        [HttpPost]
+        public IActionResult PhanHoi(PhanHoi phanHoi)
+        {
+            int? maTK = HttpContext.Session.GetInt32("MaTaiKhoan");
+            if (maTK == null)
+                return RedirectToAction("Login", "Account");
+
+            var nguoiThue = _context.NguoiThues.FirstOrDefault(x => x.MaTaiKhoan == maTK);
+            if (nguoiThue == null)
+                return NotFound();
+
+            phanHoi.MaNguoiThue = nguoiThue.MaNguoiThue;
+            phanHoi.NgayGui = DateTime.Now;
+            phanHoi.KetQuaXuLy = null;
+            phanHoi.NgayXuLy = null;
+
+            _context.PhanHois.Add(phanHoi);
+            _context.SaveChanges();
+
+            TempData["Message"] = "Gửi phản hồi thành công.";
+            return RedirectToAction("PhanHoi");
+        }
+
     }
 }

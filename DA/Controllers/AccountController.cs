@@ -96,5 +96,13 @@ public class AccountController : Controller
         else
              return RedirectToAction("Dashboard", "NguoiThue");
     }
+    public IActionResult DangXuat()
+    {
+        // Xoá toàn bộ session
+        HttpContext.Session.Clear();
+
+        // Chuyển về trang đăng nhập
+        return RedirectToAction("Login", "Account");
+    }
 }
 

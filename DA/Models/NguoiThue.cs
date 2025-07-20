@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DA.Models
@@ -10,18 +9,25 @@ namespace DA.Models
         [Key]
         public int MaNguoiThue { get; set; }
 
-        [Required]
+       
         public int MaTaiKhoan { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Họ tên không được để trống")]
         public string HoTen { get; set; }
 
+        [Required(ErrorMessage = "CCCD không được để trống")]
         public string CCCD { get; set; }
-        public string SoDienThoai { get; set; }
-        public string Email { get; set; }
-        public string DiaChi { get; set; }
 
-        [BindNever] // ⚠️ Phải có dòng này, KHÔNG dùng [Required]
+        [Required(ErrorMessage = "Số điện thoại không được để trống")]
+        public string SoDienThoai { get; set; }
+
+        [Required(ErrorMessage = "Email không được để trống")]
+        [EmailAddress(ErrorMessage = "Email không hợp lệ")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "Địa chỉ không được để trống")]
+        public string DiaChi { get; set; }
+        [ForeignKey(nameof(MaTaiKhoan))]
         public virtual TaiKhoan TaiKhoan { get; set; }
     }
 }

@@ -23,8 +23,73 @@ namespace DA.Controllers
         // Dashboard chính
         public IActionResult Dashboard()
         {
-            return View();
+            int? maTK = HttpContext.Session.GetInt32("MaTaiKhoan");
+            if (maTK == null) return RedirectToAction("Login", "Account");
+           
+
+            var nguoiThue = _context.NguoiThues.FirstOrDefault(x => x.MaTaiKhoan == maTK);
+            if (nguoiThue == null) return NotFound();
+
+            // ✅ Lấy hợp đồng trước để sử dụng ở đoạn dưới
+            var hopDong = _context.HopDongs
+    .Include(h => h.Phong)
+        .ThenInclude(p => p.ChuNha) // Thêm dòng này để EF lấy luôn thông tin chủ nhà
+    .FirstOrDefault(h => h.MaNguoiThue == nguoiThue.MaNguoiThue && h.TrangThai == "Còn hiệu lực");
+          
+            Phong phong = null;
+            if (hopDong != null)
+            {
+                // 🔍 Lấy phòng thủ công
+                phong = _context.Phongs.FirstOrDefault(p => p.MaPhong == hopDong.MaPhong);
+            }
+            if (hopDong == null)
+                return View(new TrangChuViewModel
+                {
+                    TenPhong = "Chưa có phòng thuê",
+                    TrangThaiHopDong = "Không có hợp đồng",
+                    ThongKeDichVu = new List<ThongKeDichVuVM>()
+                });
+
+            // ✅ Lấy chủ nhà từ phòng
+            var chuNha = _context.ChuNhas
+                .Include(c => c.TaiKhoan)
+                .FirstOrDefault(c => c.MaChuNha == hopDong.Phong.MaChuNha);
+
+            // ✅ Lấy biểu đồ dịch vụ
+            var thongKe = _context.HoaDons
+                .Where(h => h.MaHopDong == hopDong.MaHopDong)
+                .OrderByDescending(h => h.NgayLap)
+                .Take(6)
+                .Select(h => new ThongKeDichVuVM
+                {
+                    ThangNam = h.NgayLap.Month + "/" + h.NgayLap.Year,
+                    SoDien = (double)_context.ChiTietHoaDons
+                                .Where(ct => ct.MaHoaDon == h.MaHoaDon && ct.MaDichVu == 1)
+                                .Sum(ct => ct.SoLuong),
+                    SoNuoc = (double)_context.ChiTietHoaDons
+                                .Where(ct => ct.MaHoaDon == h.MaHoaDon && ct.MaDichVu == 2)
+                                .Sum(ct => ct.SoLuong)
+                })
+                .ToList();
+
+            // ✅ Gán vào ViewModel
+            var vm = new TrangChuViewModel
+            {
+                TenPhong = hopDong.Phong?.TenPhong,
+                NgayBatDau = hopDong.NgayBatDau,
+                NgayKetThuc = hopDong.NgayKetThuc,
+                TrangThaiHopDong = hopDong.TrangThai,
+
+                TenChuNha = chuNha?.TaiKhoan?.TenDangNhap ?? "Không rõ",
+                SDTChuNha = chuNha?.SoDienThoai ?? "",
+                EmailChuNha = chuNha?.Email ?? "",
+
+                ThongKeDichVu = thongKe
+            };
+
+            return View(vm);
         }
+
 
 
         // GET: Thông tin cá nhân
@@ -46,32 +111,16 @@ namespace DA.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ThongTinCaNhan(NguoiThue model)
         {
-            // In ra giá trị để kiểm tra
-            Console.WriteLine("🟡 POST MaNguoiThue = " + model.MaNguoiThue);
-
             if (!ModelState.IsValid)
             {
-                Console.WriteLine("❌ ModelState không hợp lệ!");
-                foreach (var key in ModelState.Keys)
-                {
-                    var errors = ModelState[key].Errors;
-                    foreach (var err in errors)
-                    {
-                        Console.WriteLine($"Lỗi ở {key}: {err.ErrorMessage}");
-                    }
-                }
-
+                TempData["Message"] = "Dữ liệu không hợp lệ!";
                 return View(model);
             }
 
             var nguoiThue = _context.NguoiThues.FirstOrDefault(x => x.MaNguoiThue == model.MaNguoiThue);
             if (nguoiThue == null)
-            {
-                Console.WriteLine("❌ Không tìm thấy người thuê!");
                 return NotFound();
-            }
 
-            // Cập nhật thủ công
             nguoiThue.HoTen = model.HoTen;
             nguoiThue.CCCD = model.CCCD;
             nguoiThue.SoDienThoai = model.SoDienThoai;
@@ -79,9 +128,8 @@ namespace DA.Controllers
             nguoiThue.DiaChi = model.DiaChi;
 
             _context.SaveChanges();
-            Console.WriteLine("✅ Cập nhật thành công");
-
             TempData["Message"] = "Cập nhật thành công!";
+
             return RedirectToAction("ThongTinCaNhan");
         }
 

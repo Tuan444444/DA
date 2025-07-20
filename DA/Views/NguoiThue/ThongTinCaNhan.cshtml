@@ -21,7 +21,8 @@
     <form asp-action="ThongTinCaNhan" method="post">
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <input type="hidden" asp-for="MaNguoiThue" />
+        <!-- <input type="hidden" asp-for="MaNguoiThue" />-->
+        <input type="hidden" name="MaNguoiThue" value="@Model.MaNguoiThue" />
         <div class="row mb-4 align-items-center">
 
             <label class="col-sm-2 col-form-label">Họ tên</label>
@@ -29,6 +30,7 @@
                 <input asp-for="HoTen" class="form-control" />
             </div>
         </div>
+
 
         <div class="row mb-4 align-items-center">
             <label class="col-sm-2 col-form-label">CCCD</label>
@@ -67,5 +69,3 @@
         </div>
     </form>
 </div>
-
-

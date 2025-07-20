@@ -7,8 +7,6 @@ namespace DA.Models
     {
         [Key]
         public int MaChuNha { get; set; }
-
-        [ForeignKey("TaiKhoan")]
         public int MaTaiKhoan { get; set; } // FK
 
         public string HoTen { get; set; }
@@ -16,7 +14,8 @@ namespace DA.Models
         public string SoDienThoai { get; set; }
         public string Email { get; set; }
         public string DiaChi { get; set; }
-
+        [ForeignKey(nameof(MaTaiKhoan))]
         public virtual TaiKhoan TaiKhoan { get; set; } // Điều hướng
+        public virtual ICollection<Phong> Phongs { get; set; }
     }
 }

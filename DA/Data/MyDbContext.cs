@@ -45,10 +45,10 @@ namespace DA.Data
             modelBuilder.Entity<Phong>().ToTable("Phong");
             // FK Phong -> ChuNha
             modelBuilder.Entity<Phong>()
-                .HasOne(p => p.ChuNha)
-                .WithMany()
-                .HasForeignKey(p => p.MaChuNha)
-                .OnDelete(DeleteBehavior.Cascade);
+    .HasOne(p => p.ChuNha)
+    .WithMany(cn => cn.Phongs) // 🔧 Quan trọng: Khai báo đúng quan hệ ngược
+    .HasForeignKey(p => p.MaChuNha)
+    .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Phong_DichVu>()
            .HasKey(p => new { p.MaPhong, p.MaDichVu });
 

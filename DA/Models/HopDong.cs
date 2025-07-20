@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DA.Models
@@ -9,26 +11,29 @@ namespace DA.Models
         [Key]
         public int MaHopDong { get; set; }
 
+        [Required]
         public int MaNguoiThue { get; set; }
+
+        [Required]
         public int MaPhong { get; set; }
 
+        [Required]
         public DateTime NgayBatDau { get; set; }
+
+        [Required]
         public DateTime NgayKetThuc { get; set; }
 
+        [Required]
         public decimal TienDatCoc { get; set; }
 
         [MaxLength(50)]
         public string TrangThai { get; set; }
 
-        // KHÓA NGOẠI
-        [ForeignKey("MaNguoiThue")]
-        public NguoiThue NguoiThue { get; set; }
+        [ForeignKey(nameof(MaNguoiThue))]
+        public virtual NguoiThue NguoiThue { get; set; }
+        [ForeignKey(nameof(MaPhong))]
+        public virtual Phong Phong { get; set; }
 
-        [ForeignKey("MaPhong")]
-        public Phong Phong { get; set; }
-
-        // Quan hệ ngược
-        public ICollection<HoaDon> HoaDons { get; set; }
+        public virtual ICollection<HoaDon> HoaDons { get; set; }
     }
-
 }

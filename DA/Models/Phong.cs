@@ -9,7 +9,7 @@ namespace DA.Models // 🔧 Thêm dòng này
         [Key]
         public int MaPhong { get; set; }
 
-        [ForeignKey("ChuNha")]
+      //  [ForeignKey("MaChuNha")]
         public int MaChuNha { get; set; }
 
         [Required]
@@ -24,7 +24,7 @@ namespace DA.Models // 🔧 Thêm dòng này
         public double DienTich { get; set; }
 
         public string TrangThai { get; set; }
-
+        [ForeignKey(nameof(MaChuNha))]
         public virtual ChuNha ChuNha { get; set; }
         public ICollection<Phong_DichVu> Phong_DichVus { get; set; }
     }

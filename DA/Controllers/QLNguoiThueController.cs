@@ -48,16 +48,17 @@ namespace DA.Controllers
         // GET: NguoiThue/Create
         public IActionResult Create()
         {
-            ViewData["MaTaiKhoan"] = new SelectList(_context.TaiKhoans, "MaTaiKhoan", "LoaiTaiKhoan");
+            ViewData["MaTaiKhoan"] = new SelectList(_context.TaiKhoans, "MaTaiKhoan", "TenDangNhap");
             return View();
         }
+
 
         // POST: NguoiThue/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaNguoiThue,MaTaiKhoan,HoTen,CCCD,SoDienThoai,Email,DiaChi")] NguoiThue nguoiThue)
+        public async Task<IActionResult> Create([Bind("MaTaiKhoan,HoTen,CCCD,SoDienThoai,Email,DiaChi")] NguoiThue nguoiThue)
         {
             if (ModelState.IsValid)
             {
@@ -65,9 +66,12 @@ namespace DA.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaTaiKhoan"] = new SelectList(_context.TaiKhoans, "MaTaiKhoan", "LoaiTaiKhoan", nguoiThue.MaTaiKhoan);
+
+            // Nếu lỗi thì nạp lại SelectList
+            ViewData["MaTaiKhoan"] = new SelectList(_context.TaiKhoans, "MaTaiKhoan", "TenDangNhap", nguoiThue.MaTaiKhoan);
             return View(nguoiThue);
         }
+
 
         // GET: NguoiThue/Edit/5
         public async Task<IActionResult> Edit(int? id)

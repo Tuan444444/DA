@@ -1,35 +1,24 @@
-﻿@model IEnumerable<DA.Models.Phong>
+﻿@model IEnumerable<Phong>
 
+<h2>Danh sách Phòng</h2>
 
-@{
-    Layout = "_ChuLayout";
-}
-<h2>Quản lý Phòng</h2>
-
-<form method="get" class="row g-3 mb-3">
-    <div class="col-auto">
-        <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="Nhập tên phòng..." />
-    </div>
-    <div class="col-auto">
-        @Html.DropDownList("TrangThai", new SelectList(
-                 new List<string> { "Tất cả", "Trống", "Đang thuê", "Bảo trì" }, ViewBag.TrangThai as string),
-                 "Chọn trạng thái", new { @class = "form-select" })
-
-
-    </div>
-    <div class="col-auto">
-        <button type="submit" class="btn btn-primary">🔍 Tìm kiếm</button>
-    </div>
+<form method="get">
+    <input type="text" name="search" value="@ViewBag.Search" placeholder="Tên phòng" />
+    @Html.DropDownList("trangThai", new SelectList(new List<string> { "Tất cả", "Trống", "Đang thuê", "Bảo trì" }, ViewBag.TrangThai as string))
+    <button type="submit">Tìm</button>
+    <a asp-action="Create" class="btn btn-success">+ Thêm Phòng</a>
 </form>
 
-<table class="table table-bordered table-striped">
-    <thead class="table-dark">
+<table class="table">
+    <thead>
         <tr>
             <th>Tên Phòng</th>
-            <th>Loại Phòng</th>
+            <th>Loại</th>
             <th>Giá</th>
             <th>Diện Tích</th>
             <th>Trạng Thái</th>
+            <th>Dịch Vụ</th>
+            <th>Hành động</th>
         </tr>
     </thead>
     <tbody>
@@ -38,9 +27,28 @@
             <tr>
                 <td>@p.TenPhong</td>
                 <td>@p.LoaiPhong</td>
-                <td>@p.GiaPhong.ToString("N0") đ</td>
-                <td>@p.DienTich m²</td>
+                <td>@p.GiaPhong</td>
+                <td>@p.DienTich</td>
                 <td>@p.TrangThai</td>
+                <td>
+                    @foreach (var pd in p.Phong_DichVus)
+                    {
+                        <span>@pd.DichVu.TenDichVu</span>
+
+                        <br />
+                    }
+                </td>
+                
+                    <!-- Phần hành động trong bảng Index thêm nút đổi trạng thái -->
+                <td>
+                    <a asp-action="Edit" asp-route-id="@p.MaPhong">Sửa</a> |
+                    <a asp-action="Delete" asp-route-id="@p.MaPhong" onclick="return confirm('Xóa phòng này?')">Xóa</a> |
+                    <a asp-action="UpdateStatus" asp-route-id="@p.MaPhong" asp-route-newStatus="Trống">Đổi Trống</a> |
+                    <a asp-action="UpdateStatus" asp-route-id="@p.MaPhong" asp-route-newStatus="Đang thuê">Đổi Đang thuê</a> |
+                    <a asp-action="UpdateStatus" asp-route-id="@p.MaPhong" asp-route-newStatus="Bảo trì">Đổi Bảo trì</a>
+                </td>
+
+                
             </tr>
         }
     </tbody>

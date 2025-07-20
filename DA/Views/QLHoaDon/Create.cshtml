@@ -1,0 +1,23 @@
+﻿@model int
+
+@{
+    ViewData["Title"] = "Tạo Hóa Đơn Mới";
+    Layout = "~/Views/Shared/_ChuLayout.cshtml";
+}
+
+<h2>Tạo Hóa Đơn Mới</h2>
+
+<form asp-action="Create" method="post" class="w-50">
+    <div class="mb-3">
+        <label class="form-label">Chọn Hợp Đồng</label>
+        <select name="maHopDong" class="form-select">
+            <option value="">-- Chọn hợp đồng --</option>
+            @foreach (var hd in ViewBag.HopDongs)
+            {
+                <option value="@hd.MaHopDong">Mã HD: @hd.MaHopDong | Phòng: @hd.MaPhong | Từ: @hd.NgayBatDau.ToString("dd/MM/yyyy")</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Tạo Hóa Đơn</button>
+    <a href="/HoaDon" class="btn btn-secondary">Hủy</a>
+</form>

@@ -1,0 +1,21 @@
+﻿@model DA.Models.Phong
+
+@{
+    ViewData["Title"] = "Xóa Phòng";
+}
+
+<h2>Bạn có chắc muốn xóa?</h2>
+
+<div>
+    <h4>@Model.TenPhong</h4>
+    <p>Loại: @Model.LoaiPhong</p>
+    <p>Giá: @Model.GiaPhong</p>
+    <p>Diện Tích: @Model.DienTich</p>
+    <p>Trạng Thái: @Model.TrangThai</p>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="MaPhong" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>

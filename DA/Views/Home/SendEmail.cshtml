@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = "Gửi Email";
+}
+
+<h2>Gửi Email</h2>
+
+<p>@ViewBag.Message</p>
+
+<form method="post" asp-action="SendEmail">
+    <button type="submit" class="btn btn-primary">Gửi email</button>
+</form>

@@ -1,33 +1,40 @@
-﻿@model DA.Models.Phong
-@{
-    ViewBag.Title = "Sửa Phòng";
-}
-@{
-    Layout = "_ChuLayout";
-}
+﻿@model Phong
+
 <h2>Sửa Phòng</h2>
 
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="MaPhong" />
-    <div class="mb-3">
+
+    <div>
         <label>Tên Phòng</label>
-        <input asp-for="TenPhong" class="form-control" />
+        <input asp-for="TenPhong" />
     </div>
-    <div class="mb-3">
+    <div>
         <label>Loại Phòng</label>
-        <input asp-for="LoaiPhong" class="form-control" />
+        <input asp-for="LoaiPhong" />
     </div>
-    <div class="mb-3">
-        <label>Giá</label>
-        <input asp-for="GiaPhong" class="form-control" />
+    <div>
+        <label>Giá Phòng</label>
+        <input asp-for="GiaPhong" />
     </div>
-    <div class="mb-3">
+    <div>
         <label>Diện Tích</label>
-        <input asp-for="DienTich" class="form-control" />
+        <input asp-for="DienTich" />
     </div>
-    <div class="mb-3">
+    <div>
         <label>Trạng Thái</label>
-        <input asp-for="TrangThai" class="form-control" />
+        <input asp-for="TrangThai" />
     </div>
-    <button type="submit" class="btn btn-primary">Lưu</button>
+
+    <div>
+        <label>Chọn Dịch Vụ:</label><br />
+        @foreach (var dv in ViewBag.DichVus)
+        {
+            bool checkedDv = ((List<int>)ViewBag.SelectedDichVus).Contains(dv.MaDichVu);
+            <input type="checkbox" name="selectedDichVus" value="@dv.MaDichVu" @(checkedDv ? "checked" : "") /> @dv.TenDichVu <br />
+        }
+    </div>
+
+    <button type="submit">Cập nhật</button>
+    <a asp-action="Index">Quay lại</a>
 </form>

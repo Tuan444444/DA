@@ -1,0 +1,61 @@
+﻿@{
+    Layout = "_ChuLayout";
+    var doanhThu = ViewBag.TongDoanhThu;
+    var trangThai = ViewBag.TrangThaiPhong;
+    var tongNguoiThue = ViewBag.TongNguoiThue;
+}
+
+<h2>Báo Cáo - Thống Kê</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <h4>Tổng Doanh Thu</h4>
+        <p class="display-6 text-success">@doanhThu.ToString("N0") VNĐ</p>
+    </div>
+    <div class="col-md-4">
+        <h4>Tổng Người Thuê</h4>
+        <p class="display-6 text-info">@tongNguoiThue</p>
+    </div>
+</div>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <h5>Biểu đồ Tình Trạng Phòng</h5>
+        <canvas id="trangThaiChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('trangThaiChart').getContext('2d');
+
+    const data = {
+        labels: [
+    @foreach (var item in trangThai)
+    {
+        <text>'@item.TrangThai',</text>
+    }
+        ],
+        datasets: [{
+            label: 'Số lượng',
+            data: [
+    @foreach (var item in trangThai)
+    {
+        <text>@item.SoLuong,</text>
+    }
+            ],
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 206, 86, 0.6)',
+                'rgba(255, 99, 132, 0.6)'
+            ]
+        }]
+    };
+
+    const trangThaiChart = new Chart(ctx, {
+        type: 'pie',
+        data: data
+    });
+</script>

@@ -1,0 +1,43 @@
+﻿@model DA.Models.HoaDon
+
+@{
+    ViewData["Title"] = "Chi tiết Hóa Đơn";
+    Layout = "~/Views/Shared/_ChuLayout.cshtml";
+}
+
+<h2>Chi tiết Hóa Đơn</h2>
+
+<div class="mb-3">
+    <strong>Mã Hóa Đơn:</strong> @Model.MaHoaDon <br />
+    <strong>Ngày Lập:</strong> @Model.NgayLap.ToString("dd/MM/yyyy") <br />
+    <strong>Khách Hàng:</strong> @Model.HopDong.NguoiThue?.HoTen <br />
+    <strong>Trạng Thái:</strong> @Model.TrangThaiThanhToan <br />
+</div>
+
+<h4>Chi Tiết Dịch Vụ</h4>
+<table class="table table-bordered">
+    <thead class="table-light">
+        <tr>
+            <th>Dịch Vụ</th>
+            <th>Số Lượng</th>
+            <th>Đơn Giá</th>
+            <th>Thành Tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ct in Model.ChiTietHoaDons)
+        {
+            <tr>
+                <td>@ct.DichVu?.TenDichVu</td>
+                <td>@ct.SoLuong</td>
+                <td>@ct.DonGia.ToString("N0")</td>
+                <td>@ct.ThanhTien.ToString("N0")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h5>Tổng tiền: <strong>@Model.TongTien.ToString("N0") VNĐ</strong></h5>
+
+<a href="/QLHoaDon" class="btn btn-secondary">Quay lại</a>
+<a href="/QLHoaDon/ExportToWord/@Model.MaHoaDon" class="btn btn-success">Xuất Word</a>

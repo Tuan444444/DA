@@ -1,32 +1,34 @@
-﻿@model DA.Models.Phong
-@{
-    ViewBag.Title = "Thêm Phòng";
-}
-@{
-    Layout = "_ChuLayout";
-}
+﻿@model Phong
+
 <h2>Thêm Phòng</h2>
 
 <form asp-action="Create" method="post">
-    <div class="mb-3">
+    <div>
         <label>Tên Phòng</label>
-        <input asp-for="TenPhong" class="form-control" />
+        <input asp-for="TenPhong" />
     </div>
-    <div class="mb-3">
+    <div>
         <label>Loại Phòng</label>
-        <input asp-for="LoaiPhong" class="form-control" />
+        <input asp-for="LoaiPhong" />
     </div>
-    <div class="mb-3">
-        <label>Giá</label>
-        <input asp-for="GiaPhong" class="form-control" />
+    <div>
+        <label>Giá Phòng</label>
+        <input asp-for="GiaPhong" />
     </div>
-    <div class="mb-3">
+    <div>
         <label>Diện Tích</label>
-        <input asp-for="DienTich" class="form-control" />
+        <input asp-for="DienTich" />
     </div>
-    <div class="mb-3">
+    <div>
         <label>Trạng Thái</label>
-        <input asp-for="TrangThai" class="form-control" />
+        <input asp-for="TrangThai" />
     </div>
-    <button type="submit" class="btn btn-success">Lưu</button>
+    <div>
+        <label>Chọn Dịch Vụ:</label><br />
+        @foreach (var dv in ViewBag.DichVus)
+        {
+            <input type="checkbox" name="selectedDichVus" value="@dv.MaDichVu" /> @dv.TenDichVu <br />
+        }
+    </div>
+    <button type="submit">Lưu</button>
 </form>

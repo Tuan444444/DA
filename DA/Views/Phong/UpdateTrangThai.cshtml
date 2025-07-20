@@ -1,0 +1,25 @@
+﻿@model DA.Models.Phong
+
+@{
+    ViewData["Title"] = "Cập nhật Trạng Thái";
+}
+
+<h2>Đổi Trạng Thái</h2>
+
+<form asp-action="UpdateTrangThai" method="post">
+    <input type="hidden" name="id" value="@Model.MaPhong" />
+
+    <div class="mb-3">
+        <label>Trạng thái hiện tại: <b>@Model.TrangThai</b></label><br />
+        @foreach (var tt in ViewBag.TrangThais as List<string>)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="trangThai" value="@tt" @(Model.TrangThai == tt ? "checked" : "") />
+                <label class="form-check-label">@tt</label>
+            </div>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</form>

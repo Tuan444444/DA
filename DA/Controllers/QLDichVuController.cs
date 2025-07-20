@@ -10,41 +10,22 @@ using DA.Models;
 
 namespace DA.Controllers
 {
-    public class QLHopDongController : Controller
+    public class QLDichVuController : Controller
     {
         private readonly MyDbContext _context;
 
-        public QLHopDongController(MyDbContext context)
+        public QLDichVuController(MyDbContext context)
         {
             _context = context;
         }
 
-        // GET: HopDong
-        public IActionResult Index(string search, string trangThai)
+        // GET: QLDichVu
+        public async Task<IActionResult> Index()
         {
-            var list = _context.HopDongs
-                .Include(h => h.NguoiThue)
-                .Include(h => h.Phong)
-                .AsQueryable();
-
-            if (!string.IsNullOrEmpty(search))
-            {
-                list = list.Where(h => h.NguoiThue.HoTen.Contains(search));
-            }
-
-            if (!string.IsNullOrEmpty(trangThai))
-            {
-                list = list.Where(h => h.TrangThai == trangThai);
-            }
-
-            ViewBag.Search = search;
-            ViewBag.TrangThai = trangThai;
-
-            return View(list.ToList());
+            return View(await _context.DichVus.ToListAsync());
         }
 
-
-        // GET: HopDong/Details/5
+        // GET: QLDichVu/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -52,39 +33,39 @@ namespace DA.Controllers
                 return NotFound();
             }
 
-            var hopDong = await _context.HopDongs
-                .FirstOrDefaultAsync(m => m.MaHopDong == id);
-            if (hopDong == null)
+            var dichVu = await _context.DichVus
+                .FirstOrDefaultAsync(m => m.MaDichVu == id);
+            if (dichVu == null)
             {
                 return NotFound();
             }
 
-            return View(hopDong);
+            return View(dichVu);
         }
 
-        // GET: HopDong/Create
+        // GET: QLDichVu/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: HopDong/Create
+        // POST: QLDichVu/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaHopDong,MaNguoiThue,MaPhong,NgayBatDau,NgayKetThuc,TienDatCoc,TrangThai")] HopDong hopDong)
+        public async Task<IActionResult> Create([Bind("MaDichVu,TenDichVu,DonGia,DonViTinh")] DichVu dichVu)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(hopDong);
+                _context.Add(dichVu);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(hopDong);
+            return View(dichVu);
         }
 
-        // GET: HopDong/Edit/5
+        // GET: QLDichVu/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -92,22 +73,22 @@ namespace DA.Controllers
                 return NotFound();
             }
 
-            var hopDong = await _context.HopDongs.FindAsync(id);
-            if (hopDong == null)
+            var dichVu = await _context.DichVus.FindAsync(id);
+            if (dichVu == null)
             {
                 return NotFound();
             }
-            return View(hopDong);
+            return View(dichVu);
         }
 
-        // POST: HopDong/Edit/5
+        // POST: QLDichVu/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MaHopDong,MaNguoiThue,MaPhong,NgayBatDau,NgayKetThuc,TienDatCoc,TrangThai")] HopDong hopDong)
+        public async Task<IActionResult> Edit(int id, [Bind("MaDichVu,TenDichVu,DonGia,DonViTinh")] DichVu dichVu)
         {
-            if (id != hopDong.MaHopDong)
+            if (id != dichVu.MaDichVu)
             {
                 return NotFound();
             }
@@ -116,12 +97,12 @@ namespace DA.Controllers
             {
                 try
                 {
-                    _context.Update(hopDong);
+                    _context.Update(dichVu);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!HopDongExists(hopDong.MaHopDong))
+                    if (!DichVuExists(dichVu.MaDichVu))
                     {
                         return NotFound();
                     }
@@ -132,10 +113,10 @@ namespace DA.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(hopDong);
+            return View(dichVu);
         }
 
-        // GET: HopDong/Delete/5
+        // GET: QLDichVu/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -143,38 +124,34 @@ namespace DA.Controllers
                 return NotFound();
             }
 
-            var hopDong = await _context.HopDongs
-                .FirstOrDefaultAsync(m => m.MaHopDong == id);
-            if (hopDong == null)
+            var dichVu = await _context.DichVus
+                .FirstOrDefaultAsync(m => m.MaDichVu == id);
+            if (dichVu == null)
             {
                 return NotFound();
             }
 
-            return View(hopDong);
+            return View(dichVu);
         }
 
-        // POST: HopDong/Delete/5
+        // POST: QLDichVu/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var hopDong = await _context.HopDongs.FindAsync(id);
-            if (hopDong != null)
+            var dichVu = await _context.DichVus.FindAsync(id);
+            if (dichVu != null)
             {
-                _context.HopDongs.Remove(hopDong);
+                _context.DichVus.Remove(dichVu);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool HopDongExists(int id)
+        private bool DichVuExists(int id)
         {
-            return _context.HopDongs.Any(e => e.MaHopDong == id);
+            return _context.DichVus.Any(e => e.MaDichVu == id);
         }
-        public IActionResult Xulyvipham()
-        {
-            return View();
-        }
-        }
+    }
 }

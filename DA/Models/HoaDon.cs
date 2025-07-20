@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DA.Models
 {
@@ -9,7 +10,8 @@ namespace DA.Models
 
         public int MaHopDong { get; set; }
 
-     
+        [ForeignKey("MaHopDong")]
+        public  HopDong HopDong { get; set; }
 
         public DateTime NgayLap { get; set; }
 
@@ -18,11 +20,7 @@ namespace DA.Models
         [MaxLength(50)]
         public string TrangThaiThanhToan { get; set; }
 
-        // FK
-        public HopDong HopDong { get; set; }
-
-        // Quan hệ ngược
         public ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; }
-    }
 
+    }
 }

@@ -27,6 +27,14 @@ namespace DA.Data
             modelBuilder.Entity<TaiKhoan>().ToTable("TaiKhoan");
             modelBuilder.Entity<ChuNha>().ToTable("ChuNha");
             modelBuilder.Entity<NguoiThue>().ToTable("NguoiThue");
+            modelBuilder.Entity<Phong>().ToTable("Phong");
+            modelBuilder.Entity<DichVu>().ToTable("DichVu");
+            modelBuilder.Entity<Phong_DichVu>().ToTable("Phong_DichVu");
+            modelBuilder.Entity<HopDong>().ToTable("HopDongs");
+            modelBuilder.Entity<HoaDon>().ToTable("HoaDons"); // KHỚP TÊN BẢNG
+            modelBuilder.Entity<ChiTietHoaDon>().ToTable("ChiTietHoaDon");
+            modelBuilder.Entity<PhanHoi>().ToTable("PhanHoi");
+            modelBuilder.Entity<LichSuLuuTru>().ToTable("LichSuLuuTrus");
 
             // 1:1 ChuNha - TaiKhoan
             modelBuilder.Entity<TaiKhoan>()
@@ -71,6 +79,23 @@ namespace DA.Data
 .HasOne(x => x.Phong)
 .WithMany()
 .HasForeignKey(x => x.MaPhong);
-        }
+           
+            modelBuilder.Entity<HopDong>()
+    .HasOne(h => h.NguoiThue)
+    .WithMany()
+    .HasForeignKey(h => h.MaNguoiThue);
+
+            modelBuilder.Entity<HopDong>()
+                .HasOne(h => h.Phong)
+                .WithMany()
+                .HasForeignKey(h => h.MaPhong);
+
+            modelBuilder.Entity<HoaDon>()
+       .HasOne(hd => hd.HopDong)
+       .WithMany(hd => hd.HoaDons)
+       .HasForeignKey(hd => hd.MaHopDong);
+        
+
+    }
     }
 }

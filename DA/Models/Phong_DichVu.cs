@@ -1,21 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace DA.Models
 {
     public class Phong_DichVu
     {
-        [Key, Column(Order = 0)]
         public int MaPhong { get; set; }
-
-        [Key, Column(Order = 1)]
         public int MaDichVu { get; set; }
 
         public DateTime NgayApDung { get; set; }
-        //vhjgv
-        public Phong Phong { get; set; }
-        public DichVu DichVu { get; set; }
+
+        [ForeignKey(nameof(MaPhong))]
+        public virtual Phong Phong { get; set; }
+
+        [ForeignKey(nameof(MaDichVu))]
+        public virtual DichVu DichVu { get; set; }
     }
-
-
 }

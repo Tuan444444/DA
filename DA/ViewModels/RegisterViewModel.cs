@@ -6,6 +6,7 @@ namespace DA.ViewModels
 
     public class RegisterViewModel
     {
+
         public string TenDangNhap { get; set; }
         public string MatKhau { get; set; }
         public string LoaiTaiKhoan { get; set; } // Admin, ChuNha, NguoiThue

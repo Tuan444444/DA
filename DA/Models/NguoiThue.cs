@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DA.Models
@@ -26,8 +28,9 @@ namespace DA.Models
 
         [Required(ErrorMessage = "Địa chỉ không được để trống")]
         public string DiaChi { get; set; }
-
+        [ValidateNever]
         [ForeignKey(nameof(MaTaiKhoan))]
+        
         public virtual TaiKhoan TaiKhoan { get; set; } // Điều hướng
     }
 }

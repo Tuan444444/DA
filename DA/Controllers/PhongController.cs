@@ -38,22 +38,68 @@ namespace DA.Controllers
 
 
         // Tạo mới
+        [HttpGet]
         public IActionResult Create()
         {
+            ViewBag.DichVus = _context.DichVus.ToList(); // danh sách dịch vụ
             return View();
         }
 
+        // POST: Phong/Create
         [HttpPost]
-        public IActionResult Create(Phong phong)
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Phong phong, List<int> SelectedDichVus)
         {
+            var maTaiKhoan = HttpContext.Session.GetInt32("MaTaiKhoan");
+            Console.WriteLine("MaTaiKhoan trong session: " + maTaiKhoan);
+
+
+            if (maTaiKhoan == null)
+                return RedirectToAction("Login", "Account");
+
+            
+     
+
+            var chuNha = _context.ChuNhas.FirstOrDefault(c => c.MaTaiKhoan == maTaiKhoan);
+
+            if (chuNha == null)
+            {
+                ModelState.AddModelError("", "Không tìm thấy thông tin chủ nhà.");
+                ViewBag.DichVus = _context.DichVus.ToList();
+                return View(phong);
+            }
+
+            phong.MaChuNha = chuNha.MaChuNha;
+
             if (ModelState.IsValid)
             {
                 _context.Phongs.Add(phong);
                 _context.SaveChanges();
+
+                // Lưu danh sách dịch vụ đi kèm
+                if (SelectedDichVus != null && SelectedDichVus.Any())
+                {
+                    foreach (var maDv in SelectedDichVus)
+                    {
+                        _context.Phong_DichVus.Add(new Phong_DichVu
+                        {
+                            MaPhong = phong.MaPhong,
+                            MaDichVu = maDv,
+                            NgayApDung = DateTime.Now
+                        });
+                    }
+
+                    _context.SaveChanges();
+                }
+
                 return RedirectToAction("Index");
             }
+
+            // Nếu có lỗi
+            ViewBag.DichVus = _context.DichVus.ToList();
             return View(phong);
         }
+
 
         // Sửa
         public IActionResult Edit(int id)
@@ -67,12 +113,23 @@ namespace DA.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Phongs.Update(phong);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
+                var phongCu = _context.Phongs.FirstOrDefault(p => p.MaPhong == phong.MaPhong);
+                if (phongCu != null)
+                {
+                    phongCu.TenPhong = phong.TenPhong;
+                    phongCu.LoaiPhong = phong.LoaiPhong;
+                    phongCu.GiaPhong = phong.GiaPhong;
+                    phongCu.DienTich = phong.DienTich;
+                    phongCu.TrangThai = phong.TrangThai;
+
+                    _context.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                return NotFound();
             }
             return View(phong);
         }
+
 
         // Xóa
         public IActionResult Delete(int id)

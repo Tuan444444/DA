@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DA.Data;
+using DA.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DA.Data;
-using DA.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DA.Controllers
 {
@@ -19,45 +19,43 @@ namespace DA.Controllers
             _context = context;
         }
 
-        // GET: NguoiThue
-        public async Task<IActionResult> Index()
+        // GET: Danh sách người thuê
+        public async Task<IActionResult> Index(string searchString)
         {
-            var myDbContext = _context.NguoiThues.Include(n => n.TaiKhoan);
-            return View(await myDbContext.ToListAsync());
-        }
+            var query = _context.NguoiThues.Include(n => n.TaiKhoan).AsQueryable();
 
-        // GET: NguoiThue/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
+            if (!string.IsNullOrEmpty(searchString))
             {
-                return NotFound();
+                query = query.Where(nt => nt.HoTen.Contains(searchString));
             }
 
-            var nguoiThue = await _context.NguoiThues
-                .Include(n => n.TaiKhoan)
-                .FirstOrDefaultAsync(m => m.MaNguoiThue == id);
-            if (nguoiThue == null)
-            {
-                return NotFound();
-            }
-
-            return View(nguoiThue);
+            ViewData["CurrentFilter"] = searchString;
+            return View(await query.ToListAsync());
         }
 
-        // GET: NguoiThue/Create
+
+        // GET: Create - Truyền sẵn MaTaiKhoan từ đăng ký
+
+        // GET: Create
         public IActionResult Create()
         {
-            ViewData["MaTaiKhoan"] = new SelectList(_context.TaiKhoans, "MaTaiKhoan", "LoaiTaiKhoan");
+            var danhSachTaiKhoanChuaLienKet = _context.TaiKhoans
+                .Where(t => t.LoaiTaiKhoan == "NguoiThue" && !_context.NguoiThues.Any(nt => nt.MaTaiKhoan == t.MaTaiKhoan))
+                .Select(t => new SelectListItem
+                {
+                    Value = t.MaTaiKhoan.ToString(),
+                    Text = t.MaTaiKhoan.ToString() // 👉 Hiển thị Mã tài khoản
+                }).ToList();
+
+            ViewBag.MaTaiKhoan = danhSachTaiKhoanChuaLienKet;
+
             return View();
         }
 
-        // POST: NguoiThue/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaNguoiThue,MaTaiKhoan,HoTen,CCCD,SoDienThoai,Email,DiaChi")] NguoiThue nguoiThue)
+        public async Task<IActionResult> Create(NguoiThue nguoiThue)
         {
             if (ModelState.IsValid)
             {
@@ -65,83 +63,83 @@ namespace DA.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaTaiKhoan"] = new SelectList(_context.TaiKhoans, "MaTaiKhoan", "LoaiTaiKhoan", nguoiThue.MaTaiKhoan);
+
+            // Load lại danh sách nếu có lỗi
+            var danhSachTaiKhoanChuaLienKet = _context.TaiKhoans
+                .Where(t => t.LoaiTaiKhoan == "NguoiThue" && !_context.NguoiThues.Any(nt => nt.MaTaiKhoan == t.MaTaiKhoan))
+                .Select(t => new SelectListItem
+                {
+                    Value = t.MaTaiKhoan.ToString(),
+                    Text = t.MaTaiKhoan.ToString() // 👉 Hiển thị lại Mã tài khoản khi lỗi
+                }).ToList();
+
+            ViewBag.MaTaiKhoan = danhSachTaiKhoanChuaLienKet;
+
             return View(nguoiThue);
         }
 
-        // GET: NguoiThue/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var nguoiThue = await _context.NguoiThues.FindAsync(id);
-            if (nguoiThue == null)
-            {
-                return NotFound();
-            }
-            ViewData["MaTaiKhoan"] = new SelectList(_context.TaiKhoans, "MaTaiKhoan", "LoaiTaiKhoan", nguoiThue.MaTaiKhoan);
-            return View(nguoiThue);
-        }
-
-        // POST: NguoiThue/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MaNguoiThue,MaTaiKhoan,HoTen,CCCD,SoDienThoai,Email,DiaChi")] NguoiThue nguoiThue)
+        public async Task<IActionResult> Edit(NguoiThue nguoiThue)
         {
-            if (id != nguoiThue.MaNguoiThue)
+            // 🔍 BƯỚC 1: Kiểm tra tính hợp lệ của dữ liệu model
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                var allErrors = ModelState
+                    .Where(ms => ms.Value.Errors.Count > 0)
+                    .Select(ms => new { Field = ms.Key, Errors = ms.Value.Errors.Select(e => e.ErrorMessage) })
+                    .ToList();
+
+                // In ra log hoặc tạm return về view để kiểm tra
+                return Content(System.Text.Json.JsonSerializer.Serialize(allErrors));
             }
 
-            if (ModelState.IsValid)
+            // 🔍 BƯỚC 2: Kiểm tra người thuê có tồn tại trong CSDL không
+            var existing = await _context.NguoiThues.FindAsync(nguoiThue.MaNguoiThue);
+            if (existing == null)
+                return NotFound();
+
+            // 🔁 BƯỚC 3: Cập nhật từng trường (tránh bind nhầm FK như MaTaiKhoan)
+            existing.HoTen = nguoiThue.HoTen;
+            existing.Email = nguoiThue.Email;
+            existing.CCCD = nguoiThue.CCCD;
+            existing.SoDienThoai = nguoiThue.SoDienThoai;
+            existing.DiaChi = nguoiThue.DiaChi;
+
+            try
             {
-                try
-                {
-                    _context.Update(nguoiThue);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!NguoiThueExists(nguoiThue.MaNguoiThue))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                // 💾 Lưu thay đổi vào CSDL
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaTaiKhoan"] = new SelectList(_context.TaiKhoans, "MaTaiKhoan", "LoaiTaiKhoan", nguoiThue.MaTaiKhoan);
-            return View(nguoiThue);
+            catch (DbUpdateException ex)
+            {
+                // 🧨 Nếu có lỗi khi lưu (thường do ràng buộc FK hoặc dữ liệu trống)
+                return Content("Lỗi khi lưu CSDL: " + ex.Message);
+            }
         }
 
-        // GET: NguoiThue/Delete/5
+
+
+
+        // GET: Delete
+        // GET: QLNguoiThue/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var nguoiThue = await _context.NguoiThues
-                .Include(n => n.TaiKhoan)
-                .FirstOrDefaultAsync(m => m.MaNguoiThue == id);
-            if (nguoiThue == null)
-            {
-                return NotFound();
-            }
+                .Include(nt => nt.TaiKhoan)
+                .FirstOrDefaultAsync(nt => nt.MaNguoiThue == id);
+
+            if (nguoiThue == null) return NotFound();
 
             return View(nguoiThue);
         }
 
-        // POST: NguoiThue/Delete/5
+        // POST: QLNguoiThue/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -150,10 +148,25 @@ namespace DA.Controllers
             if (nguoiThue != null)
             {
                 _context.NguoiThues.Remove(nguoiThue);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+
+        // GET: Details
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var nguoiThue = await _context.NguoiThues
+                .Include(nt => nt.TaiKhoan)
+                .FirstOrDefaultAsync(nt => nt.MaNguoiThue == id);
+
+            if (nguoiThue == null) return NotFound();
+
+            return View(nguoiThue);
         }
 
         private bool NguoiThueExists(int id)

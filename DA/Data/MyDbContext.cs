@@ -30,11 +30,11 @@ namespace DA.Data
             modelBuilder.Entity<Phong>().ToTable("Phong");
             modelBuilder.Entity<DichVu>().ToTable("DichVu");
             modelBuilder.Entity<Phong_DichVu>().ToTable("Phong_DichVu");
-            modelBuilder.Entity<HopDong>().ToTable("HopDongs");
-            modelBuilder.Entity<HoaDon>().ToTable("HoaDons"); // KHỚP TÊN BẢNG
+            modelBuilder.Entity<HopDong>().ToTable("HopDong");
+            modelBuilder.Entity<HoaDon>().ToTable("HoaDon"); // KHỚP TÊN BẢNG
             modelBuilder.Entity<ChiTietHoaDon>().ToTable("ChiTietHoaDon");
             modelBuilder.Entity<PhanHoi>().ToTable("PhanHoi");
-            modelBuilder.Entity<LichSuLuuTru>().ToTable("LichSuLuuTrus");
+            modelBuilder.Entity<LichSuLuuTru>().ToTable("LichSuLuuTru");
 
             // 1:1 ChuNha - TaiKhoan
             modelBuilder.Entity<TaiKhoan>()

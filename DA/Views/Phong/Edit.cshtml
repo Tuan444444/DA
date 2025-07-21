@@ -1,0 +1,33 @@
+﻿@model DA.Models.Phong
+@{
+    ViewBag.Title = "Sửa Phòng";
+}
+@{
+    Layout = "_ChuLayout";
+}
+<h2>Sửa Phòng</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="MaPhong" />
+    <div class="mb-3">
+        <label>Tên Phòng</label>
+        <input asp-for="TenPhong" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Loại Phòng</label>
+        <input asp-for="LoaiPhong" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Giá</label>
+        <input asp-for="GiaPhong" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Diện Tích</label>
+        <input asp-for="DienTich" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Trạng Thái</label>
+        <input asp-for="TrangThai" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Lưu</button>
+</form>

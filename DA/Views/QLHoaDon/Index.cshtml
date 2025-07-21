@@ -1,0 +1,35 @@
+﻿<!-- Views/HoaDon/Index.cshtml -->
+@{
+    Layout = "_ChuLayout";
+}
+@model IEnumerable<HoaDon>
+
+<h2>Danh sách Hoá đơn</h2>
+<a href="/QLHoaDon/Generate" class="btn btn-success mb-3">⚙️ Xuất hoá đơn tháng</a>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Mã Hợp đồng</th>
+            <th>Ngày lập</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.MaHopDong</td>
+                <td>@item.NgayLap.ToString("dd/MM/yyyy")</td>
+                <td>@item.TongTien.ToString("N0")</td>
+                <td>@item.TrangThaiThanhToan</td>
+            </tr>
+        }
+    </tbody>
+</table>

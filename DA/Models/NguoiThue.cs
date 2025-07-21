@@ -9,7 +9,6 @@ namespace DA.Models
         [Key]
         public int MaNguoiThue { get; set; }
 
-       
         public int MaTaiKhoan { get; set; }
 
         [Required(ErrorMessage = "Họ tên không được để trống")]
@@ -27,7 +26,8 @@ namespace DA.Models
 
         [Required(ErrorMessage = "Địa chỉ không được để trống")]
         public string DiaChi { get; set; }
+
         [ForeignKey(nameof(MaTaiKhoan))]
-        public virtual TaiKhoan TaiKhoan { get; set; }
+        public virtual TaiKhoan TaiKhoan { get; set; } // Điều hướng
     }
 }

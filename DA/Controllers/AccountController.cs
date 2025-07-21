@@ -92,7 +92,7 @@ public class AccountController : Controller
         if (tk.LoaiTaiKhoan == "Admin")
             return RedirectToAction("Index", "Admin");
         else if (tk.LoaiTaiKhoan == "ChuNha")
-            return RedirectToAction("ChuNhaDashboard", "Home");
+            return RedirectToAction("Index", "Chu");
         else
              return RedirectToAction("Dashboard", "NguoiThue");
     }

@@ -10,7 +10,7 @@ namespace DA.Models
         public int MaHoaDon { get; set; }
 
         public int MaHopDong { get; set; }
-     // da xoa thang nam
+
         public DateTime NgayLap { get; set; }
 
         public decimal TongTien { get; set; }
@@ -25,5 +25,4 @@ namespace DA.Models
         // Quan hệ ngược
         public ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; }
     }
-
 }

@@ -1,7 +1,4 @@
-﻿@{
-    Layout = null;
-}
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -279,7 +276,6 @@
             font-weight: bold;
             cursor: pointer;
         }
-
     </style>
 </head>
 <body>
@@ -306,20 +302,20 @@
                 Phòng Trọ khu vực Hà Nội uy tín,giá cực hợp lý
             </p>
 
-           
+
         </div>
 
-       
+
     </section>
 
     <!-- Search Box (separate section) -->
     <section class="search-wrapper">
-		<div class="tabs">
-			<button class="active">Tất cả</button>
-			<button>Nhà trọ, phòng trọ</button>
-			<button>Nhà nguyên căn</button>
-			<button>Căn hộ</button>
-		</div>
+        <div class="tabs">
+            <button class="active">Tất cả</button>
+            <button>Nhà trọ, phòng trọ</button>
+            <button>Nhà nguyên căn</button>
+            <button>Căn hộ</button>
+        </div>
         <div class="search-box">
             <input type="text" placeholder="🔍 Bạn muốn tìm trọ ở đâu?">
             <select>
@@ -567,8 +563,8 @@
         </div>
     </div>
 
-    
-               <script>
+
+    <script>
         const modal = document.getElementById("detailModal");
         const closeBtn = document.querySelector(".close-btn");
 
@@ -594,10 +590,10 @@
 
         closeBtn.onclick = () => modal.style.display = "none";
         window.onclick = (e) => {
-          if (e.target === modal) modal.style.display = "none";
-        };
+                  if (e.target === modal) modal.style.display = "none";
+                };
     </script>
 
-   
+
 </body>
 </html>

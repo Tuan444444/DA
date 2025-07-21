@@ -36,7 +36,7 @@ public class HomeController : Controller
         try
         {
             await _emailService.SendEmailAsync(
-     "tuanhoang19042004@gmail.com",
+     "dmanh0364@gmail.com",
      "Thử nghiệm gửi từ ứng dụng ASP.NET Core",
      "<h2>Xin chào!</h2><p>Đây là email gửi tự động từ ứng dụng ASP.NET Core 8. Nội dung phong phú hơn để tránh bị spam.</p>");
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DA.Data;
 using DA.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DA.Controllers
 {
@@ -62,13 +63,18 @@ namespace DA.Controllers
         {
             if (ModelState.IsValid)
             {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                Console.WriteLine("Errors: " + string.Join(", ", errors));
                 _context.Add(nguoiThue);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            else {
+                Console.WriteLine("Errors");
+            }
 
-            // Nếu lỗi thì nạp lại SelectList
-            ViewData["MaTaiKhoan"] = new SelectList(_context.TaiKhoans, "MaTaiKhoan", "TenDangNhap", nguoiThue.MaTaiKhoan);
+                // Nếu lỗi thì nạp lại SelectList
+                ViewData["MaTaiKhoan"] = new SelectList(_context.TaiKhoans, "MaTaiKhoan", "TenDangNhap", nguoiThue.MaTaiKhoan);
             return View(nguoiThue);
         }
 

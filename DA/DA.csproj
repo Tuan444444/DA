@@ -7,6 +7,43 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\images\1734022222220_1000019365.jpg" />
+    <None Include="wwwroot\images\1736133901018_img_0995.jpeg" />
+    <None Include="wwwroot\images\2517_phan_dang_gian_h2.jpg" />
+    <None Include="wwwroot\images\27b83fe7f0036b262ee3dba53d09c7f4b2336c2b.jpg" />
+    <None Include="wwwroot\images\466391792_585354647562427_7891275609762049053_n.jpg" />
+    <None Include="wwwroot\images\495964693_1806955463567123_6508541893117010987_n.jpg" />
+    <None Include="wwwroot\images\498650906_2722310491301518_7088910522304103659_n.jpg" />
+    <None Include="wwwroot\images\503936297_734471239077687_4027857100147822122_n.jpg" />
+    <None Include="wwwroot\images\Duong B1 %281%29.jpeg" />
+    <None Include="wwwroot\images\images %281%29.jpg" />
+    <None Include="wwwroot\images\images %282%29.jpg" />
+    <None Include="wwwroot\images\images %283%29.jpg" />
+    <None Include="wwwroot\images\images %284%29.jpg" />
+    <None Include="wwwroot\images\images %285%29.jpg" />
+    <None Include="wwwroot\images\images %286%29.jpg" />
+    <None Include="wwwroot\images\images %287%29.jpg" />
+    <None Include="wwwroot\images\images %288%29.jpg" />
+    <None Include="wwwroot\images\images %289%29.jpg" />
+    <None Include="wwwroot\images\images.jpg" />
+    <None Include="wwwroot\images\mai-thuc-loan3.jpg" />
+    <None Include="wwwroot\images\nha_tro_le_hong_phong_di_an_binh_duong_7.jpg" />
+    <None Include="wwwroot\images\tran_nguyen_dan_h3.jpg" />
+    <None Include="wwwroot\images\tải xuống %281%29.jpg" />
+    <None Include="wwwroot\images\tải xuống %2810%29.jpg" />
+    <None Include="wwwroot\images\tải xuống %2811%29.jpg" />
+    <None Include="wwwroot\images\tải xuống %2812%29.jpg" />
+    <None Include="wwwroot\images\tải xuống %282%29.jpg" />
+    <None Include="wwwroot\images\tải xuống %283%29.jpg" />
+    <None Include="wwwroot\images\tải xuống %284%29.jpg" />
+    <None Include="wwwroot\images\tải xuống %286%29.jpg" />
+    <None Include="wwwroot\images\tải xuống %287%29.jpg" />
+    <None Include="wwwroot\images\tải xuống %288%29.jpg" />
+    <None Include="wwwroot\images\tải xuống %289%29.jpg" />
+    <None Include="wwwroot\images\tải xuống.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DocX" Version="4.0.25105.5786" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.18" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.18">

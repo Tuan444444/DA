@@ -1,4 +1,5 @@
 ﻿using DA.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace DA.Models
@@ -7,7 +8,6 @@ namespace DA.Models
     [Key]
     public int MaPhong { get; set; }
 
-    [ForeignKey("ChuNha")]
     public int MaChuNha { get; set; }
 
     [Required]
@@ -22,8 +22,9 @@ namespace DA.Models
     public double DienTich { get; set; }
 
     public string TrangThai { get; set; }
-
-    public virtual ChuNha ChuNha { get; set; }
+        [ValidateNever]
+        [ForeignKey(nameof(MaChuNha))]
+        public virtual ChuNha ChuNha { get; set; }
     public ICollection<Phong_DichVu> Phong_DichVus { get; set; }
 }
 

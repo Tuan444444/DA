@@ -70,32 +70,36 @@ namespace DA.Data
                 .HasOne(p => p.DichVu)
                 .WithMany(d => d.Phong_DichVus)
                 .HasForeignKey(p => p.MaDichVu);
-           
+
             modelBuilder.Entity<LichSuLuuTru>()
     .HasOne(x => x.NguoiThue)
     .WithMany()
-    .HasForeignKey(x => x.MaNguoiThue);
+    .HasForeignKey(x => x.MaNguoiThue)
+    .OnDelete(DeleteBehavior.Cascade); // hoặc Restrict
+
             modelBuilder.Entity<LichSuLuuTru>()
 .HasOne(x => x.Phong)
 .WithMany()
-.HasForeignKey(x => x.MaPhong);
-           
+.HasForeignKey(x => x.MaPhong)
+.OnDelete(DeleteBehavior.Restrict); // hoặc NoAction
+
             modelBuilder.Entity<HopDong>()
     .HasOne(h => h.NguoiThue)
     .WithMany()
-    .HasForeignKey(h => h.MaNguoiThue);
+    .HasForeignKey(h => h.MaNguoiThue)
+    .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<HopDong>()
                 .HasOne(h => h.Phong)
                 .WithMany()
-                .HasForeignKey(h => h.MaPhong);
+                .HasForeignKey(h => h.MaPhong)
+                .OnDelete(DeleteBehavior.Restrict); // Tránh multiple cascade paths
 
             modelBuilder.Entity<HoaDon>()
        .HasOne(hd => hd.HopDong)
        .WithMany(hd => hd.HoaDons)
        .HasForeignKey(hd => hd.MaHopDong);
-        
 
-    }
+        }
     }
 }

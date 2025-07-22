@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DA.Models
@@ -9,8 +10,8 @@ namespace DA.Models
         public int MaHoaDon { get; set; }
 
         public int MaHopDong { get; set; }
-
-        [ForeignKey("MaHopDong")]
+        [ValidateNever]
+        [ForeignKey(nameof(MaHopDong))]
         public  HopDong HopDong { get; set; }
 
         public DateTime NgayLap { get; set; }

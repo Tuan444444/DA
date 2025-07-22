@@ -30,7 +30,10 @@ namespace DA.Models
         public string DiaChi { get; set; }
         [ValidateNever]
         [ForeignKey(nameof(MaTaiKhoan))]
-        
         public virtual TaiKhoan TaiKhoan { get; set; } // Điều hướng
+       
+        [ValidateNever]
+        public ICollection<PhanHoi> PhanHois { get; set; }
+
     }
 }

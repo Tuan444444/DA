@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DA.Models
@@ -16,7 +17,9 @@ namespace DA.Models
         public DateTime NgayKetThuc { get; set; }
 
         // FK
+        [ValidateNever]
         public NguoiThue NguoiThue { get; set; }
+        [ValidateNever]
         public Phong Phong { get; set; }
     }
 

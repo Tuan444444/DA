@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -28,12 +29,17 @@ namespace DA.Models
 
         [MaxLength(50)]
         public string TrangThai { get; set; }
-
+        [ValidateNever]
         [ForeignKey(nameof(MaNguoiThue))]
+        
         public virtual NguoiThue NguoiThue { get; set; }
+        [ValidateNever]
         [ForeignKey(nameof(MaPhong))]
         public virtual Phong Phong { get; set; }
-
+        [ValidateNever]
         public virtual ICollection<HoaDon> HoaDons { get; set; }
+        [ValidateNever]
+        public virtual ICollection<ChiSoDichVu> ChiSoDichVus { get; set; }
+
     }
 }

@@ -22,6 +22,8 @@ namespace DA.Data
         public DbSet<ChiTietHoaDon> ChiTietHoaDons { get; set; }
         public DbSet<PhanHoi> PhanHois { get; set; }
         public DbSet<LichSuLuuTru> LichSuLuuTrus { get; set; }
+        public DbSet<ChiSoDichVu> ChiSoDichVus { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TaiKhoan>().ToTable("TaiKhoan");
@@ -94,8 +96,14 @@ namespace DA.Data
        .HasOne(hd => hd.HopDong)
        .WithMany(hd => hd.HoaDons)
        .HasForeignKey(hd => hd.MaHopDong);
-        
 
-    }
+            // PhanHoi - NguoiThue: Nhiều phản hồi thuộc về 1 người thuê
+            modelBuilder.Entity<PhanHoi>()
+                .HasOne(p => p.NguoiThue)
+                .WithMany(nt => nt.PhanHois)
+                .HasForeignKey(p => p.MaNguoiThue)
+                .OnDelete(DeleteBehavior.Restrict); // Tránh lỗi xóa liên kết
+
+        }
     }
 }

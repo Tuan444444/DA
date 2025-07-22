@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DA.Models
@@ -19,10 +20,15 @@ namespace DA.Models
         public string DonViTinh { get; set; }
 
         // Quan hệ ngược với ChiTietHoaDon
+        [ValidateNever]
         public ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; }
 
         // Quan hệ ngược với Phong_DichVu
+        [ValidateNever]
         public ICollection<Phong_DichVu> Phong_DichVus { get; set; }
+        [ValidateNever]
+        public virtual ICollection<ChiSoDichVu> ChiSoDichVus { get; set; }
+
     }
 
 }

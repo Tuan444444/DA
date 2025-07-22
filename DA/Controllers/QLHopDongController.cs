@@ -65,12 +65,17 @@ namespace DA.Controllers
         // GET: HopDong/Create
         public IActionResult Create()
         {
+            // Chỉ lấy các phòng có trạng thái "Trống"
+            var phongTrong = _context.Phongs
+                .Where(p => p.TrangThai == "Trống")
+                .ToList();
+
+            ViewBag.Phongs = new SelectList(phongTrong, "MaPhong", "TenPhong");
+            ViewBag.NguoiThues = new SelectList(_context.NguoiThues, "MaNguoiThue", "HoTen");
+
             return View();
         }
 
-        // POST: HopDong/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MaHopDong,MaNguoiThue,MaPhong,NgayBatDau,NgayKetThuc,TienDatCoc,TrangThai")] HopDong hopDong)
@@ -78,25 +83,41 @@ namespace DA.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(hopDong);
+
+                // 🔄 Cập nhật trạng thái phòng thành "Đang thuê"
+                var phong = await _context.Phongs.FindAsync(hopDong.MaPhong);
+                if (phong != null)
+                {
+                    phong.TrangThai = "Đang thuê";
+                    _context.Phongs.Update(phong); // Cập nhật lại phòng
+                }
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            // Load lại dropdown khi lỗi
+            var phongTrong = _context.Phongs.Where(p => p.TrangThai == "Trống" || p.MaPhong == hopDong.MaPhong).ToList();
+            ViewBag.Phongs = new SelectList(phongTrong, "MaPhong", "TenPhong", hopDong.MaPhong);
+            ViewBag.NguoiThues = new SelectList(_context.NguoiThues, "MaNguoiThue", "HoTen", hopDong.MaNguoiThue);
+
             return View(hopDong);
         }
+
+
 
         // GET: HopDong/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var hopDong = await _context.HopDongs.FindAsync(id);
-            if (hopDong == null)
-            {
-                return NotFound();
-            }
+            if (hopDong == null) return NotFound();
+
+            ViewBag.NguoiThues = new SelectList(_context.NguoiThues, "MaNguoiThue", "HoTen", hopDong.MaNguoiThue);
+            ViewBag.Phongs = new SelectList(_context.Phongs, "MaPhong", "TenPhong", hopDong.MaPhong);
+            ViewBag.TrangThais = new SelectList(new[] { "Còn hiệu lực", "Hết hạn", "Hủy" }, hopDong.TrangThai);
+
             return View(hopDong);
         }
 
@@ -105,12 +126,9 @@ namespace DA.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MaHopDong,MaNguoiThue,MaPhong,NgayBatDau,NgayKetThuc,TienDatCoc,TrangThai")] HopDong hopDong)
+        public async Task<IActionResult> Edit(int id, HopDong hopDong)
         {
-            if (id != hopDong.MaHopDong)
-            {
-                return NotFound();
-            }
+            if (id != hopDong.MaHopDong) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -118,20 +136,19 @@ namespace DA.Controllers
                 {
                     _context.Update(hopDong);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!HopDongExists(hopDong.MaHopDong))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!HopDongExists(hopDong.MaHopDong)) return NotFound();
+                    throw;
                 }
-                return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.NguoiThues = new SelectList(_context.NguoiThues, "MaNguoiThue", "HoTen", hopDong.MaNguoiThue);
+            ViewBag.Phongs = new SelectList(_context.Phongs, "MaPhong", "TenPhong", hopDong.MaPhong);
+            ViewBag.TrangThais = new SelectList(new[] { "Còn hiệu lực", "Hết hạn", "Hủy" }, hopDong.TrangThai);
+
             return View(hopDong);
         }
 
